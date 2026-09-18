@@ -18,7 +18,7 @@ namespace Game.Scripts.Core.PlayerSystem
             }
             
             PlayerCamera.Change(camera);
-            
+
             yield break;
         }
 

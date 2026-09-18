@@ -7,14 +7,15 @@ namespace Game.Scripts.Core.LevelSystem
     public class LevelSceneAsset : ScriptableObject
     {
         [SerializeField] private int sceneBuildIndex;
+        
         [Space]
         [SerializeField] private LoadSceneParameters loadSceneParameters;
-        
+
         public int GetSceneBuildIndex()
         {
             return sceneBuildIndex;
         }
-        
+
         public LoadSceneParameters GetLoadSceneParameters()
         {
             return loadSceneParameters;
