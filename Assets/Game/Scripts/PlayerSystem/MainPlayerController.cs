@@ -8,7 +8,7 @@ namespace Game.Scripts.PlayerSystem
 {
     public class MainPlayerController : PlayerController
     {
-        [SerializeField] private PlayerPawnController pawn;
+        [SerializeField] private PawnController pawn;
         [SerializeField] private PlayerBuilderController builder;
 
         public override IEnumerator EnablePlayer(CameraController camera)

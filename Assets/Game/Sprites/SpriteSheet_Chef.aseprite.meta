@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a375a167499272748994bd9fc52c7563
+guid: d0cc75e51d0cae745be382a456540a2d
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -80,7 +80,7 @@ ScriptedImporter:
     defaultPivotSpace: 0
     defaultPivotAlignment: 7
     customPivotPosition: {x: 0.5, y: 0.5}
-    mosaicPadding: 4
+    mosaicPadding: 8
     spritePadding: 0
     generateModelPrefab: 1
     generateAnimationClips: 1
@@ -95,7 +95,7 @@ ScriptedImporter:
     defaultPivotSpace: 0
     defaultPivotAlignment: 7
     customPivotPosition: {x: 0.5, y: 0.5}
-    mosaicPadding: 4
+    mosaicPadding: 8
     spritePadding: 0
     generateModelPrefab: 1
     generateAnimationClips: 1
@@ -103,7 +103,7 @@ ScriptedImporter:
     addShadowCasters: 0
     generateIndividualEvents: 1
     generateSpriteAtlas: 1
-  platformSettingsDirtyTick: 639253519694918077
+  platformSettingsDirtyTick: 639254371003090645
   singleSpriteImportData:
   - name: 
     originalName: 
@@ -127,9 +127,9 @@ ScriptedImporter:
     tessellationDetail: 0
     uvTransform: {x: 0, y: 0}
   animatedSpriteImportData:
-  - name: Player_Draft
+  - name: Frame_0
     originalName: 
-    pivot: {x: 0.44444445, y: 0}
+    pivot: {x: 0.45454544, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     customData: 
@@ -137,9 +137,9 @@ ScriptedImporter:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 9
-      height: 14
-    spriteID: 4c8d4c0f60884a446b6b3f2b9b640cdc
+      width: 11
+      height: 15
+    spriteID: 825d1fae9b1756c4696f3e8b2d2e5c06
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -148,8 +148,29 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     uvTransform: {x: 4, y: 4}
+  - name: Frame_1
+    originalName: 
+    pivot: {x: 0.45454544, y: 0}
+    alignment: 9
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 27
+      width: 11
+      height: 14
+    spriteID: 17165fb89e0f43d40821d5b935e4f36e
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 4, y: 27}
   spriteSheetImportData:
-  - name: Player_Draft
+  - name: Chef_Idle_0
     originalName: 
     pivot: {x: 0.5, y: 0}
     alignment: 7
@@ -157,11 +178,74 @@ ScriptedImporter:
     customData: 
     rect:
       serializedVersion: 2
-      x: 0
-      y: 4
+      x: 34
+      y: 8
       width: 16
       height: 16
-    spriteID: 8da29cd5f80e44245a00840eca9fe035
+    spriteID: c2f575b5d80d36d43b2129bed1aab0bd
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
+  - name: Chef_Idle_1
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 7
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 5
+      y: 40
+      width: 16
+      height: 16
+    spriteID: 845bdf89478588d48a6ed5c278734c9d
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
+  - name: Chef_Run_0
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 7
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 6
+      y: 8
+      width: 16
+      height: 16
+    spriteID: 5c498d7703ab73343800dceb50331746
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    uvTransform: {x: 0, y: 0}
+  - name: Chef_Run_1
+    originalName: 
+    pivot: {x: 0.5, y: 0}
+    alignment: 7
+    border: {x: 0, y: 0, z: 0, w: 0}
+    customData: 
+    rect:
+      serializedVersion: 2
+      x: 31
+      y: 40
+      width: 16
+      height: 16
+    spriteID: df1dc407b48be2245b844b782aae7ffa
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -184,15 +268,42 @@ ScriptedImporter:
     layerType: 0
     blendMode: 0
     cells:
-    - name: Player_Draft
+    - name: Frame_0
       frameIndex: 0
       additiveSortOrder: 0
       cellRect:
-        x: 4
+        x: 19
+        y: 0
+        width: 11
+        height: 15
+      spriteId: 825d1fae9b1756c4696f3e8b2d2e5c06
+    - name: Frame_1
+      frameIndex: 1
+      additiveSortOrder: 0
+      cellRect:
+        x: 19
+        y: 0
+        width: 11
+        height: 14
+      spriteId: 17165fb89e0f43d40821d5b935e4f36e
+    - name: Frame_2
+      frameIndex: 2
+      additiveSortOrder: 0
+      cellRect:
+        x: 18
+        y: 0
+        width: 13
+        height: 16
+      spriteId: 5ced883489001a44a99da5baf3c96cf5
+    - name: Frame_3
+      frameIndex: 3
+      additiveSortOrder: 0
+      cellRect:
+        x: 20
         y: 0
         width: 9
-        height: 14
-      spriteId: 4c8d4c0f60884a446b6b3f2b9b640cdc
+        height: 15
+      spriteId: 994bf5c7252658c49931dccd0b4dc51c
     linkedCells: []
     tileCells: []
     tileSetIndex: 0
@@ -237,5 +348,5 @@ ScriptedImporter:
     androidETC2FallbackOverride: 0
   generatePhysicsShape: 0
   secondarySpriteTextures: []
-  previousTextureSize: {x: 32, y: 32}
-  canvasSize: {x: 16, y: 16}
+  previousTextureSize: {x: 64, y: 64}
+  canvasSize: {x: 48, y: 32}

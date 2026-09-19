@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6756766742903529110}
   - component: {fileID: 4977625341215722953}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Block_Blue_10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -102,7 +102,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8655567703759648252}
   - component: {fileID: 5214069251903375856}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Block_Blue_00
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -193,7 +193,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6979379687877960844}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Figure_J
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -229,7 +229,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5397809002788264225}
   - component: {fileID: 3216848579035582417}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Block_Blue_20
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -321,7 +321,7 @@ GameObject:
   m_Component:
   - component: {fileID: 560037489262812512}
   - component: {fileID: 3644178020105937856}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Block_Blue_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
