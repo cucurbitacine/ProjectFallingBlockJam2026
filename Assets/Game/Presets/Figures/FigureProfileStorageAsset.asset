@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6adb210320d34c48a102e2897097792b, type: 3}
+  m_Name: FigureProfileStorageAsset
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.FigureProfileStorageAsset
+  figures:
+  - key: 0
+    value: {fileID: 11400000, guid: 823302e037a26474c81bee41068a5b65, type: 2}
+  - key: 1
+    value: {fileID: 11400000, guid: e9fcc98dd42a7f047b2a6cf527ab1e86, type: 2}
+  - key: 2
+    value: {fileID: 11400000, guid: 04cfba858497d514192e79bb5dd1bf4a, type: 2}
+  - key: 3
+    value: {fileID: 11400000, guid: b3d7544144b8028419238819c48959d8, type: 2}
+  - key: 4
+    value: {fileID: 11400000, guid: fd1d694fa64640d4797dbe57c95939dd, type: 2}
+  - key: 5
+    value: {fileID: 11400000, guid: 98feb8a648435d741a0e730c8495cbf6, type: 2}
+  - key: 6
+    value: {fileID: 11400000, guid: c382bc52188f0744ab05df8a9e91ea35, type: 2}

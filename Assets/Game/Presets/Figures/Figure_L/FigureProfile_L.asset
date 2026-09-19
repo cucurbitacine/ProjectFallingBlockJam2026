@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: faee881590fc401a8e0f5a8946102a6f, type: 3}
+  m_Name: FigureProfile_L
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.FigureProfileAsset
+  figureDefault: {fileID: 11400000, guid: 8e2cb4b7d1f0475429d7a5a9bc800d39, type: 2}
+  states:
+  - key: 0
+    value: {fileID: 11400000, guid: 8e2cb4b7d1f0475429d7a5a9bc800d39, type: 2}
+  - key: 1
+    value: {fileID: 11400000, guid: b30bcc6e59d744f429d0e9dbfa6d92c4, type: 2}
+  - key: 2
+    value: {fileID: 11400000, guid: 23f2cc70fe0523e418e0af4b700d10c2, type: 2}
+  - key: 3
+    value: {fileID: 11400000, guid: cce38597477a5df4aac43d6dd9834cc5, type: 2}
