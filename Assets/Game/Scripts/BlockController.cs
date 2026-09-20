@@ -6,13 +6,18 @@ namespace Game.Scripts
     [RequireComponent(typeof(Collider2D))]
     public class BlockController : MonoBehaviour
     {
-        [SerializeField] private Vector2Int localPosition;
+        [SerializeField] private Vector3Int localCell;
         
         private Collider2D _collider;
 
-        public Vector2Int GetLocalPosition()
+        public Vector3Int GetCell()
         {
-            return localPosition;
+            return localCell;
+        }
+
+        public void SetCell(Vector3Int cell)
+        {
+            localCell = cell;
         }
         
         public Collider2D GetCollider()
@@ -32,5 +37,15 @@ namespace Game.Scripts
             var y = (int)transform.position.y;
             name = $"Block_{x}{y}";
         }
+
+        public Vector2 GetWorldPosition()
+        {
+            return transform.position;
+        }
+    }
+
+    public static class BlockExtension
+    {
+        
     }
 }

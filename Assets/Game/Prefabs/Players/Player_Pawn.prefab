@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6298153755025902104}
   - component: {fileID: 7444630266091975751}
   m_Layer: 0
-  m_Name: Player_Play
+  m_Name: Player_Pawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.PlayerSystem.MainPlayerController
   <PlayerTransform>k__BackingField:
-    playerTransform: {fileID: 0}
+    playerTransform: {fileID: 7986684205417881065}
   pawn: {fileID: 4313512318340067572}
   builder: {fileID: 4537455503059515237}
 --- !u!1 &6560741198422549938
@@ -104,7 +104,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 692998443760713727, guid: 390f87776165d0740b7a06ed7b17dd78, type: 3}
       propertyPath: m_Name
-      value: Player_Pawn
+      value: Pawn_Chef
       objectReference: {fileID: 0}
     - target: {fileID: 1335214167612487770, guid: 390f87776165d0740b7a06ed7b17dd78, type: 3}
       propertyPath: m_LocalPosition.x

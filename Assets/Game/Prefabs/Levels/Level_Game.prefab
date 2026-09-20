@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7374785122672662406}
   - component: {fileID: 1192220087580016142}
   m_Layer: 0
-  m_Name: Level_Play
+  m_Name: Level_Game
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -51,4 +51,5 @@ MonoBehaviour:
   ui: {fileID: 0}
   levelParameters:
     previousSceneId: 0
+  gameState: 0
   menuLevelScene: {fileID: 11400000, guid: 8988f1d04fa628f41b3a2446c212d9dd, type: 2}

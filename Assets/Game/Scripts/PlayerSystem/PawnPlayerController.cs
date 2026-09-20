@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Game.Scripts.PlayerSystem
 {
-    public class MainPlayerController : PlayerController
+    public class PawnPlayerController : PlayerController
     {
         [SerializeField] private PawnController pawn;
         [SerializeField] private PlayerBuilderController builder;
