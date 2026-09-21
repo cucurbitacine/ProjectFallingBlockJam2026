@@ -3,7 +3,6 @@ using Game.Scripts.Core.LevelSystem;
 using Game.Scripts.Core.PlayerSystem;
 using Game.Scripts.Core.WorldSystem;
 using Game.Scripts.LevelSystem;
-using Unity.Cinemachine;
 using UnityEngine;
 
 namespace Game.Scripts.CameraSystem

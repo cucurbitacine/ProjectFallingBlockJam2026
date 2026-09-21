@@ -1,6 +1,5 @@
 using System.Collections;
 using Game.Scripts.Core.PlayerSystem;
-using Game.Scripts.PlayerSystem.BuilderSystem;
 using Game.Scripts.PlayerSystem.PawnSystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -11,7 +10,6 @@ namespace Game.Scripts.PlayerSystem
     {
         [Header("Pawn")]
         [SerializeField] private PawnController pawn;
-        [SerializeField] private PlayerBuilderController builder;
 
         [Header("Input Pawn")]
         [SerializeField] private InputActionReference moveAction;
@@ -24,8 +22,6 @@ namespace Game.Scripts.PlayerSystem
             moveAction.action.performed += OnMove;
             moveAction.action.canceled += OnMove;
             jumpAction.action.performed += OnJump;
-            
-            yield return builder.Activate();
         }
 
         public override void DisablePlayer()
@@ -33,8 +29,6 @@ namespace Game.Scripts.PlayerSystem
             moveAction.action.performed -= OnMove;
             moveAction.action.canceled -= OnMove;
             jumpAction.action.performed -= OnJump;
-            
-            builder.Deactivate();
             
             base.DisablePlayer();
         }

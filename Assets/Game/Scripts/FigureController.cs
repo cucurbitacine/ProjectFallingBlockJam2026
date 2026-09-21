@@ -55,7 +55,7 @@ namespace Game.Scripts
             return worldCenter;
         }
         
-        private void SetupFigure()
+        public void SetupFigure()
         {
             SetupBlocks();
         }

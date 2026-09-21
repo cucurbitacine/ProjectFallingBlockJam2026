@@ -137,7 +137,7 @@ namespace Game.Scripts.LevelSystem
             {
                 restTimeout = restBetweenFigures;
                 gridWorld.MergeFigure();
-                gridWorld.CheckFullLines();
+                gridWorld.ClearFullLines();
                 RandomizeNextFigure();
             }
             else if (enterState is GameState.Fail or GameState.Success)
@@ -232,6 +232,8 @@ namespace Game.Scripts.LevelSystem
 
         private void OnLeft(InputAction.CallbackContext context)
         {
+            if (GetGameState() != GameState.Falling) return;
+            
             var left = -1;
             
             if (gridWorld.IsPossibleMoveFigureX(left))
@@ -242,6 +244,8 @@ namespace Game.Scripts.LevelSystem
 
         private void OnRight(InputAction.CallbackContext context)
         {
+            if (GetGameState() != GameState.Falling) return;
+            
             var right = 1;
             
             if (gridWorld.IsPossibleMoveFigureX(right))
@@ -252,6 +256,8 @@ namespace Game.Scripts.LevelSystem
 
         private void OnRotate(InputAction.CallbackContext context)
         {
+            if (GetGameState() != GameState.Falling) return;
+            
             if (gridWorld.IsPossibleRotateFigure())
             {
                 gridWorld.RotateFigure();
@@ -260,6 +266,8 @@ namespace Game.Scripts.LevelSystem
         
         private void OnDown(InputAction.CallbackContext context)
         {
+            if (GetGameState() != GameState.Falling) return;
+            
             if (context.started)
             {
                 isFastFalling = true;
@@ -295,6 +303,12 @@ namespace Game.Scripts.LevelSystem
         private void Update()
         {
             UpdateGame(GetGameState(), Time.deltaTime);
+        }
+
+        private void OnDisable()
+        {
+            RemovePawnCallbacks();
+            RemoveBuildCallbacks();
         }
 
         private void OnDrawGizmos()

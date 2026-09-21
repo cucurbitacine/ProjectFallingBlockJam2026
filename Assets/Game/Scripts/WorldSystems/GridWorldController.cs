@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Game.Scripts.Core.WorldSystem;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -29,7 +31,7 @@ namespace Game.Scripts.WorldSystems
             return worldGrid;
         }
 
-        public void LaunchFigureAtHeight(FigureType figureType, FigureState figureState, int height)
+        public bool LaunchFigureAtHeight(FigureType figureType, FigureState figureState, int height)
         {
             MergeFigure();
             
@@ -37,12 +39,18 @@ namespace Game.Scripts.WorldSystems
             var figureSpawnCenter = worldGrid.CellToWorld(figureSpawnCenterCell);
             
             fallingFigure = SpawnFigure(figureType, figureState, figureSpawnCenter);
-            UpdateBlockCells(fallingFigure);
+            fallingFigure.SetupFigure();
+            UpdateFigureCell(fallingFigure);
             
             var figureCenter = fallingFigure.GetWorldCenter();
             var figureOffset = figureSpawnCenter - figureCenter;
             fallingFigure.transform.position += figureOffset;
-            UpdateBlockCells(fallingFigure);
+            UpdateFigureCell(fallingFigure);
+
+            if (!CheckFigureIntersectWithTower(fallingFigure)) return false;
+            
+            UpdateBlocksPosition(fallingFigure, 0f);
+            return true;
         }
         
         public bool IsPossibleMoveFigureY(int offset)
@@ -137,12 +145,51 @@ namespace Game.Scripts.WorldSystems
         
         public bool IsPossibleRotateFigure()
         {
-            return false;
+            var rotation = Quaternion.Euler(0f, 0, 90f);
+            //var centerOfRotation = worldGrid.GetCellCenterWorld(worldGrid.WorldToCell(fallingFigure.GetWorldCenter()));
+            var centerOfRotation = fallingFigure.GetWorldCenter();
+            for (var i = 0; i < fallingFigure.BlocksCount; i++)
+            {
+                var block = fallingFigure.GetBlock(i);
+                var blockCell = block.GetCell();
+                var blockCenter = worldGrid.GetCellCenterWorld(blockCell);
+                var blockVector = blockCenter - centerOfRotation;
+                var blockVectorRotated = rotation * blockVector;
+                var blockCenterRotated = blockVectorRotated + centerOfRotation;
+                var blockCellRotated = worldGrid.WorldToCell(blockCenterRotated);
+
+                if (blockCellRotated.x < gridBoundX.x || blockCellRotated.x > gridBoundX.y) return false;
+                if (blockCellRotated.y < gridBoundY.x || blockCellRotated.y > gridBoundY.y) return false;
+                
+                if (tower.TryGetValue(blockCellRotated.y, out var line))
+                {
+                    if (line.Any(b => b.GetCell().x == blockCellRotated.x))
+                    {
+                        return false;
+                    }
+                }
+            }
+            
+            return true;
         }
 
         public void RotateFigure()
         {
-            
+            var rotation = Quaternion.Euler(0f, 0, 90f);
+            //var centerOfRotation = worldGrid.GetCellCenterWorld(worldGrid.WorldToCell(fallingFigure.GetWorldCenter()));
+            var centerOfRotation = fallingFigure.GetWorldCenter();
+            for (var i = 0; i < fallingFigure.BlocksCount; i++)
+            {
+                var block = fallingFigure.GetBlock(i);
+                var blockCell = block.GetCell();
+                var blockCenter = worldGrid.GetCellCenterWorld(blockCell);
+                var blockVector = blockCenter - centerOfRotation;
+                var blockVectorRotated = rotation * blockVector;
+                var blockCenterRotated = blockVectorRotated + centerOfRotation;
+                var blockCellRotated = worldGrid.WorldToCell(blockCenterRotated);
+                block.SetCell(blockCellRotated);
+                UpdateBlockPosition(block, 0f);
+            }
         }
         
         public void MergeFigure()
@@ -150,23 +197,36 @@ namespace Game.Scripts.WorldSystems
             if (fallingFigure != null)
             {
                 MergeFigure(fallingFigure);
+
+                fallingFigure = null;
             }
         }
         
-        public int CheckFullLines()
+        public void ClearFullLines()
         {
-            var count = 0;
-
             foreach (var line in tower)
             {
-                if (line.Value.Count >= 10)
+                var fullLine = true;
+                for (var x = gridBoundX.x; x <= gridBoundX.y; x++)
                 {
-                    count++;
-                    // TODO Destroy Line
+                    if (line.Value.All(b => b.GetCell().x != x))
+                    {
+                        fullLine = false;
+                    }
+
+                    if (!fullLine) break;
+                }
+                
+                if (fullLine)
+                {
+                    foreach (var block in line.Value)
+                    {
+                        Destroy(block.gameObject);
+                    }
+                    
+                    line.Value.Clear();
                 }
             }
-            
-            return count;
         }
         
         private FigureController SpawnFigure(FigureType figureType, FigureState figureState, Vector2 spawnPosition)
@@ -179,7 +239,7 @@ namespace Game.Scripts.WorldSystems
             return Instantiate(figurePrefab, spawnPosition, Quaternion.identity, figureContainer);
         }
 
-        private void UpdateBlockCells(FigureController figure)
+        private void UpdateFigureCell(FigureController figure)
         {
             for (var i = 0; i < figure.BlocksCount; i++)
             {
@@ -208,11 +268,23 @@ namespace Game.Scripts.WorldSystems
                     row = new List<BlockController>();
                     tower[blockCell.y] = row;
                 }
-                
-                row.Add(block);
+
+                if (!row.Contains(block))
+                {
+                    row.Add(block);
+                }
             }
         }
 
+        private void UpdateBlocksPosition(FigureController figure, float deltaTime)
+        {
+            for (var i = 0; i < figure.BlocksCount; i++)
+            {
+                var block = fallingFigure.GetBlock(i);
+                UpdateBlockPosition(block, deltaTime);
+            }
+        }
+        
         private void UpdateBlockPosition(BlockController block, float deltaTime)
         {
             var targetPosition = worldGrid.GetCellCenterWorld(block.GetCell());
@@ -225,15 +297,29 @@ namespace Game.Scripts.WorldSystems
             block.transform.position = targetPosition;
         }
         
+        private bool CheckFigureIntersectWithTower(FigureController figure)
+        {
+            for (var i = 0; i < figure.BlocksCount; i++)
+            {
+                var block = figure.GetBlock(i);
+                var blockCell = block.GetCell();
+                if (tower.TryGetValue(blockCell.y, out var line))
+                {
+                    if (line.Any(b => b.GetCell().x == blockCell.x))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+        
         private void Update()
         {
             if (fallingFigure)
             {
-                for (var i = 0; i < fallingFigure.BlocksCount; i++)
-                {
-                    var block = fallingFigure.GetBlock(i);
-                    UpdateBlockPosition(block, Time.deltaTime);
-                }
+                UpdateBlocksPosition(fallingFigure, Time.deltaTime);
             }
         }
 
