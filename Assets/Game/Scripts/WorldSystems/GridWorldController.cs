@@ -333,5 +333,24 @@ namespace Game.Scripts.WorldSystems
             var gridBoundSize = max - min;
             Gizmos.DrawWireCube(gridBoundCenter, gridBoundSize);
         }
+
+        public bool IsLowerThen(float height)
+        {
+            for (var i = 0; i < fallingFigure.BlocksCount; i++)
+            {
+                var block = fallingFigure.GetBlock(i);
+                var blockCell = block.GetCell();
+                var blockWorldCenter = worldGrid.GetCellCenterWorld(blockCell);
+                if (blockWorldCenter.y >= height) return false;
+            }
+            
+            return true;
+        }
+
+        public void SkipFigure()
+        {
+            Destroy(fallingFigure.gameObject);
+            fallingFigure = null;
+        }
     }
 }

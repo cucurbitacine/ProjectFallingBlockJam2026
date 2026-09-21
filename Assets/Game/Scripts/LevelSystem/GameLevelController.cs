@@ -27,6 +27,8 @@ namespace Game.Scripts.LevelSystem
         [SerializeField] private float fastGameTick = 0.1f;
         [Min(0f)]
         [SerializeField] private float restBetweenFigures = 1f;
+        [Min(0f)]
+        [SerializeField] private float maxFallDistance = 2.5f;
         
         [Header("Required")]
         [SerializeField] private Transform spawnPoint;
@@ -169,9 +171,17 @@ namespace Game.Scripts.LevelSystem
                 restTimeout += deltaTime;
             }
         }
-
+        
         private void UpdateFalling(float deltaTime)
         {
+            var playerY = pawnPlayer.PlayerTransform.Get().position.y;
+            var fallDistance = GetCurrentHeight() - playerY;
+            if (fallDistance > maxFallDistance)
+            {
+                ChangeState(GameState.Fail);
+                return;
+            }
+            
             if (tickTimeout >= GetGameTick())
             {
                 var down = -1;
@@ -179,6 +189,12 @@ namespace Game.Scripts.LevelSystem
                 {
                     gridWorld.MoveFigureY(down);
                     tickTimeout = 0f;
+
+                    if (gridWorld.IsLowerThen(GetCurrentHeight() - maxFallDistance))
+                    {
+                        gridWorld.SkipFigure();
+                        ChangeState(GameState.Consequence);
+                    }
                 }
                 else
                 {

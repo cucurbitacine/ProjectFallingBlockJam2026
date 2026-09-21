@@ -910,6 +910,17 @@
                 },
                 {
                     "name": "",
+                    "id": "f84473a2-e47f-4e12-a7ed-ca3b98fff579",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "8b93cc45-9835-4742-8616-7c59ebc46402",
                     "path": "<Gamepad>/dpad/up",
                     "interactions": "",

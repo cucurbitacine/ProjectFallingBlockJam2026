@@ -223,13 +223,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Camera_Tower
       objectReference: {fileID: 0}
-    - target: {fileID: 2087737769498565078, guid: 1824894cc00759e4fb15c73f077f9d87, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 4
+    - target: {fileID: 5460265405469617758, guid: 1824894cc00759e4fb15c73f077f9d87, type: 3}
+      propertyPath: Lens.OrthographicSize
+      value: 7.5
       objectReference: {fileID: 0}
     - target: {fileID: 5915052771857008488, guid: 1824894cc00759e4fb15c73f077f9d87, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4
+      value: 6.5
       objectReference: {fileID: 0}
     - target: {fileID: 5915052771857008488, guid: 1824894cc00759e4fb15c73f077f9d87, type: 3}
       propertyPath: m_LocalPosition.z
@@ -277,7 +277,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8814534948786074284, guid: 1824894cc00759e4fb15c73f077f9d87, type: 3}
       propertyPath: orthographic size
-      value: 6
+      value: 7.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -413,6 +413,10 @@ PrefabInstance:
     - target: {fileID: 1192220087580016142, guid: f94a0a4d5b17c2f4e827cf8c412960e6, type: 3}
       propertyPath: fastGameTick
       value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1192220087580016142, guid: f94a0a4d5b17c2f4e827cf8c412960e6, type: 3}
+      propertyPath: maxFallDistance
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 1192220087580016142, guid: f94a0a4d5b17c2f4e827cf8c412960e6, type: 3}
       propertyPath: figureSpawnHeight
