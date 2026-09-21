@@ -82,7 +82,7 @@ namespace Game.Scripts.Core.LevelSystem
         
         protected virtual IEnumerator EnableCamera()
         {
-            yield return camera?.EnableCamera(player);
+            yield return camera?.EnableCamera(player, world, this);
         }
         
         protected virtual IEnumerator EnableUI()

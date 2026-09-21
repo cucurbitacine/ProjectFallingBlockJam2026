@@ -221,11 +221,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1001650395787753148, guid: 1824894cc00759e4fb15c73f077f9d87, type: 3}
       propertyPath: m_Name
-      value: Camera_Play
+      value: Camera_Tower
+      objectReference: {fileID: 0}
+    - target: {fileID: 2087737769498565078, guid: 1824894cc00759e4fb15c73f077f9d87, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5915052771857008488, guid: 1824894cc00759e4fb15c73f077f9d87, type: 3}
       propertyPath: m_LocalPosition.y
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5915052771857008488, guid: 1824894cc00759e4fb15c73f077f9d87, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 7352566402095812738, guid: 1824894cc00759e4fb15c73f077f9d87, type: 3}
       propertyPath: m_LocalPosition.x
@@ -266,6 +274,10 @@ PrefabInstance:
     - target: {fileID: 7352566402095812738, guid: 1824894cc00759e4fb15c73f077f9d87, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8814534948786074284, guid: 1824894cc00759e4fb15c73f077f9d87, type: 3}
+      propertyPath: orthographic size
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -400,7 +412,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1192220087580016142, guid: f94a0a4d5b17c2f4e827cf8c412960e6, type: 3}
       propertyPath: fastGameTick
-      value: 0.05
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 1192220087580016142, guid: f94a0a4d5b17c2f4e827cf8c412960e6, type: 3}
       propertyPath: figureSpawnHeight

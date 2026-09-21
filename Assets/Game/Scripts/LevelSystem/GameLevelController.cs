@@ -67,6 +67,11 @@ namespace Game.Scripts.LevelSystem
             return isFastFalling ? fastGameTick : gameTick;
         }
         
+        public float GetCurrentHeight()
+        {
+            return currentHeight;
+        }
+        
         protected override IEnumerator EnableWorld()
         {
             yield return base.EnableWorld();
