@@ -135,10 +135,6 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2432667319412941216, guid: 09cb9cfddb11e38439a88cfad4de4fd2, type: 3}
-      propertyPath: figureSpeed
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 4775948512892743068, guid: 09cb9cfddb11e38439a88cfad4de4fd2, type: 3}
       propertyPath: m_Name
       value: World_Grid
@@ -403,8 +399,8 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1192220087580016142, guid: f94a0a4d5b17c2f4e827cf8c412960e6, type: 3}
-      propertyPath: gameTick
-      value: 1
+      propertyPath: fastGameTick
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 1192220087580016142, guid: f94a0a4d5b17c2f4e827cf8c412960e6, type: 3}
       propertyPath: figureSpawnHeight

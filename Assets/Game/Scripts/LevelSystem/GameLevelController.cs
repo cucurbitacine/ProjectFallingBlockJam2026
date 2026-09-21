@@ -4,6 +4,8 @@ using Game.Scripts.Core.LevelSystem;
 using Game.Scripts.PlayerSystem;
 using Game.Scripts.WorldSystems;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using Random = UnityEngine.Random;
 
 namespace Game.Scripts.LevelSystem
 {
@@ -11,28 +13,41 @@ namespace Game.Scripts.LevelSystem
     {
         [Header("Game Level")]
         [SerializeField] private GameState gameState = GameState.Unknown;
-
+        [SerializeField] private FigureType nextFigureType;
+        [SerializeField] private FigureState nextFigureState;
+        
         [Min(0)]
         [SerializeField] private int currentHeight = 0;
         [Min(0)]
         [SerializeField] private int figureSpawnHeight = 20;
         
-        
         [Header("Settings")]
         [Min(0f)]
         [SerializeField] private float gameTick = 0.5f;
+        [SerializeField] private float fastGameTick = 0.1f;
         [Min(0f)]
         [SerializeField] private float restBetweenFigures = 1f;
         
         [Header("Required")]
+        [SerializeField] private Transform spawnPoint;
         [SerializeField] private LevelSceneAsset menuLevelScene;
 
+        [Header("Input Build")]
+        [SerializeField] private InputActionReference leftAction;
+        [SerializeField] private InputActionReference rightAction;
+        [SerializeField] private InputActionReference rotateAction;
+        [SerializeField] private InputActionReference downAction;
+        
         private bool isPlaying;
         private float tickTimeout = 0f;
         private float restTimeout = 0f;
+        private bool isFastFalling = false;
         
         private PawnPlayerController pawnPlayer;
         private GridWorldController gridWorld;
+        
+        private FigureType[] figureTypes;
+        private FigureState[] figureStates;
         
         public event Action<GameState, GameState> GameStateChanged; 
         
@@ -45,6 +60,11 @@ namespace Game.Scripts.LevelSystem
         public GameState GetGameState()
         {
             return gameState;
+        }
+
+        public float GetGameTick()
+        {
+            return isFastFalling ? fastGameTick : gameTick;
         }
         
         protected override IEnumerator EnableWorld()
@@ -59,7 +79,7 @@ namespace Game.Scripts.LevelSystem
             yield return base.EnablePlayer();
 
             pawnPlayer = this.GetPlayer<PawnPlayerController>();
-            pawnPlayer.PlayerTransform.Get().position = gridWorld.GetSpawnPoint();
+            pawnPlayer.PlayerTransform.Get().position = GetSpawnPoint();
         }
 
         protected override IEnumerator EnableLevel()
@@ -84,19 +104,40 @@ namespace Game.Scripts.LevelSystem
             
             GameStateChanged?.Invoke(prevState, nextState);
         }
-        
-        private void OnGameStateChanged(GameState prevState, GameState nextState)
+
+        private void OnGameStateChanged(GameState exitState, GameState enterState)
         {
-            if (nextState == GameState.Falling)
+            if (exitState is GameState.Initializing)
             {
-                tickTimeout = gameTick;
-                gridWorld.LaunchFallingFigure(currentHeight + figureSpawnHeight);
+                SetPawnCallbacks();
             }
-            else if (nextState == GameState.Consequence)
+            else if (exitState is GameState.Falling)
+            {
+                RemoveBuildCallbacks();
+            }
+
+            if (enterState is GameState.Initializing)
+            {
+                figureTypes = (FigureType[])Enum.GetValues(typeof(FigureType));
+                figureStates = (FigureState[])Enum.GetValues(typeof(FigureState));
+                RandomizeNextFigure();
+            }
+            else if (enterState is GameState.Falling)
+            {
+                SetBuildCallbacks();
+                tickTimeout = 0f;
+                gridWorld.LaunchFigureAtHeight(nextFigureType, nextFigureState, currentHeight + figureSpawnHeight);
+            }
+            else if (enterState is GameState.Consequence)
             {
                 restTimeout = restBetweenFigures;
-                gridWorld.MergeFallingFigure();
+                gridWorld.MergeFigure();
                 gridWorld.CheckFullLines();
+                RandomizeNextFigure();
+            }
+            else if (enterState is GameState.Fail or GameState.Success)
+            {
+                RemovePawnCallbacks();
             }
         }
         
@@ -114,25 +155,25 @@ namespace Game.Scripts.LevelSystem
         
         private void UpdateConsequence(float deltaTime)
         {
-            if (restTimeout <= 0f)
+            if (restTimeout >= restBetweenFigures)
             {
                 ChangeState(GameState.Falling);
             }
             else
             {
-                restTimeout -= deltaTime;
+                restTimeout += deltaTime;
             }
         }
 
         private void UpdateFalling(float deltaTime)
         {
-            if (tickTimeout <= 0f)
+            if (tickTimeout >= GetGameTick())
             {
-                var offset = -1;
-                if (gridWorld.IsPossibleMoveY(offset))
+                var down = -1;
+                if (gridWorld.IsPossibleMoveFigureY(down))
                 {
-                    gridWorld.MoveY(offset);
-                    tickTimeout = gameTick;
+                    gridWorld.MoveFigureY(down);
+                    tickTimeout = 0f;
                 }
                 else
                 {
@@ -141,7 +182,108 @@ namespace Game.Scripts.LevelSystem
             }
             else
             {
-                tickTimeout -= deltaTime;
+                tickTimeout += deltaTime;
+            }
+        }
+        
+        private void RandomizeNextFigure()
+        {
+            nextFigureType = figureTypes[Random.Range(0, figureTypes.Length)];
+            nextFigureState = figureStates[Random.Range(0, figureStates.Length)];
+        }
+        
+        private Vector2 GetSpawnPoint()
+        {
+            return spawnPoint == null ? transform.position : spawnPoint.position;
+        }
+
+        private void SetPawnCallbacks()
+        {
+            pawnPlayer.GetPawn().Landed += OnPlayerPawnLanded;
+        }
+
+        private void RemovePawnCallbacks()
+        {
+            pawnPlayer.GetPawn().Landed -= OnPlayerPawnLanded;
+        }
+        
+        private void SetBuildCallbacks()
+        {
+            leftAction.action.started += OnLeft;
+            rightAction.action.started += OnRight;
+            rotateAction.action.started += OnRotate;
+            downAction.action.started += OnDown;
+            downAction.action.canceled += OnDown;
+        }
+        
+        private void RemoveBuildCallbacks()
+        {
+            leftAction.action.started -= OnLeft;
+            rightAction.action.started -= OnRight;
+            rotateAction.action.started -= OnRotate;
+            downAction.action.started -= OnDown;
+            downAction.action.canceled -= OnDown;
+        }
+
+        private void OnLeft(InputAction.CallbackContext context)
+        {
+            var left = -1;
+            
+            if (gridWorld.IsPossibleMoveFigureX(left))
+            {
+                gridWorld.MoveFigureX(left);
+            }
+        }
+
+        private void OnRight(InputAction.CallbackContext context)
+        {
+            var right = 1;
+            
+            if (gridWorld.IsPossibleMoveFigureX(right))
+            {
+                gridWorld.MoveFigureX(right);
+            }
+        }
+
+        private void OnRotate(InputAction.CallbackContext context)
+        {
+            if (gridWorld.IsPossibleRotateFigure())
+            {
+                gridWorld.RotateFigure();
+            }
+        }
+        
+        private void OnDown(InputAction.CallbackContext context)
+        {
+            if (context.started)
+            {
+                isFastFalling = true;
+                
+                if (GetGameState() == GameState.Falling)
+                {
+                    var down = -1;
+                    if (gridWorld.IsPossibleMoveFigureY(down))
+                    {
+                        gridWorld.MoveFigureY(down);
+                        tickTimeout = 0f;
+                    }
+                }
+            }
+            else if (context.canceled)
+            {
+                isFastFalling = false;
+                tickTimeout = 0f;
+            }
+        }
+        
+        private void OnPlayerPawnLanded()
+        {
+            var playerCenter = pawnPlayer.GetPawn().GetWorldCenter();
+            var playerCell = gridWorld.GetWorldGrid().WorldToCell(playerCenter);
+
+            if (playerCell.y > currentHeight)
+            {
+                currentHeight = playerCell.y;
             }
         }
         
@@ -154,11 +296,15 @@ namespace Game.Scripts.LevelSystem
         {
             if (isPlaying)
             {
-                var playerPosition = pawnPlayer.PlayerTransform.Get().position;
-                var cell = gridWorld.GetWorldGrid().WorldToCell(playerPosition);
-                var playerBlockCenter = gridWorld.GetWorldGrid().GetCellCenterWorld(cell);
+                var playerCenter = pawnPlayer.GetPawn().GetWorldCenter();
+                var playerCell = gridWorld.GetWorldGrid().WorldToCell(playerCenter);
+                var playerBlockCenter = gridWorld.GetWorldGrid().GetCellCenterWorld(playerCell);
                 
+                Gizmos.color = Color.white;
                 Gizmos.DrawWireCube(playerBlockCenter, gridWorld.GetWorldGrid().cellSize);
+
+                Gizmos.color = Color.cyan;
+                Gizmos.DrawWireCube(Vector3.up * currentHeight + Vector3.up * 0.5f, new Vector3(10, 1));
             }
         }
     }

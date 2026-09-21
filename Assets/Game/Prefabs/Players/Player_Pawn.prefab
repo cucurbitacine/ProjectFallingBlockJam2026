@@ -50,6 +50,8 @@ MonoBehaviour:
     playerTransform: {fileID: 7986684205417881065}
   pawn: {fileID: 4313512318340067572}
   builder: {fileID: 4537455503059515237}
+  moveAction: {fileID: -1680190386980627800, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  jumpAction: {fileID: -2099379676528639254, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
 --- !u!1 &6560741198422549938
 GameObject:
   m_ObjectHideFlags: 0

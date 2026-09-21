@@ -38,14 +38,9 @@ namespace Game.Scripts
             name = $"Block_{x}{y}";
         }
 
-        public Vector2 GetWorldPosition()
+        public Vector3 GetWorldCenter()
         {
             return transform.position;
         }
-    }
-
-    public static class BlockExtension
-    {
-        
     }
 }

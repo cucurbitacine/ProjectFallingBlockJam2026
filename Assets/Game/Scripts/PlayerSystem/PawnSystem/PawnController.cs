@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Game.Scripts.PlayerSystem.PawnSystem
 {
@@ -9,6 +7,7 @@ namespace Game.Scripts.PlayerSystem.PawnSystem
     public class PawnController : MonoBehaviour
     {
         [SerializeField] private bool grounded;
+        [SerializeField] private Vector2 worldCenter = Vector2.up * 0.5f;
 
         [Header("Ground")]
         [Min(0f)]
@@ -20,10 +19,6 @@ namespace Game.Scripts.PlayerSystem.PawnSystem
         [SerializeField] private float moveSpeed = 5f;
         [SerializeField] private float jumpHeight = 1.2f;
         
-        [Header("Input")]
-        [SerializeField] private InputActionReference moveAction;
-        [SerializeField] private InputActionReference jumpAction;
-
         private Vector2 moveInput;
         private Rigidbody2D body;
         private ColliderArray2D groundCheck;
@@ -33,23 +28,14 @@ namespace Game.Scripts.PlayerSystem.PawnSystem
         public Vector2 MoveInput => moveInput;
         public bool IsMoving => !Mathf.Approximately(MoveInput.x, 0f);
         public bool Grounded => grounded;
+
+        public event Action Landed;
         
-        public IEnumerator Activate()
+        public Vector3 GetWorldCenter()
         {
-            moveAction.action.performed += OnMove;
-            moveAction.action.canceled += OnMove;
-            jumpAction.action.performed += OnJump;
-                
-            yield break;
+            return transform.TransformPoint(worldCenter);
         }
-
-        public void Deactivate()
-        {
-            moveAction.action.performed -= OnMove;
-            moveAction.action.canceled -= OnMove;
-            jumpAction.action.performed -= OnJump;
-        }
-
+        
         public void Move(Vector2 move)
         {
             moveInput = move;
@@ -65,34 +51,17 @@ namespace Game.Scripts.PlayerSystem.PawnSystem
         
         private void GroundCheck()
         {
-            var groundCheckPosition = transform.position;
             groundCheck = Physics2D.OverlapCircle(groundCheckPosition, groundCheckRadius, groundCheckFilter);
 
+            var wasGrounded = grounded;
             grounded = groundCheck.Length > 0;
+
+            if (!wasGrounded && grounded)
+            {
+                Landed?.Invoke();
+            }
         }
         
-        private void OnMove(InputAction.CallbackContext context)
-        {
-            if (context.performed)
-            {
-                Move(context.ReadValue<Vector2>());
-            }
-            else if (context.canceled)
-            {
-                Move(Vector2.zero);
-            }
-        }
-
-        private void OnJump(InputAction.CallbackContext context)
-        {
-            if (!grounded) return;
-            
-            if (context.performed)
-            {
-                Jump();
-            }
-        }
-
         private void Awake()
         {
             body = GetComponent<Rigidbody2D>();
