@@ -235,6 +235,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3805000354778827563, guid: 4847d50ae43de2a4fa025bd89532ab27, type: 3}
+      propertyPath: rotationBlock
+      value: 
+      objectReference: {fileID: 4580941483976867191}
+    - target: {fileID: 3805000354778827563, guid: 4847d50ae43de2a4fa025bd89532ab27, type: 3}
       propertyPath: blocks.Array.size
       value: 4
       objectReference: {fileID: 0}

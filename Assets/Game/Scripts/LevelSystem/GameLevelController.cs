@@ -137,7 +137,7 @@ namespace Game.Scripts.LevelSystem
             }
             else if (enterState is GameState.Consequence)
             {
-                restTimeout = restBetweenFigures;
+                restTimeout = 0f;
                 gridWorld.MergeFigure();
                 gridWorld.ClearFullLines();
                 RandomizeNextFigure();
@@ -239,6 +239,8 @@ namespace Game.Scripts.LevelSystem
         
         private void RemoveBuildCallbacks()
         {
+            isFastFalling = false;
+            
             leftAction.action.started -= OnLeft;
             rightAction.action.started -= OnRight;
             rotateAction.action.started -= OnRotate;

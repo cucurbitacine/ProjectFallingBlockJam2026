@@ -38,15 +38,24 @@ namespace Game.Scripts.WorldSystems
             var figureSpawnCenterCell = new Vector3Int(0, height);
             var figureSpawnCenter = worldGrid.CellToWorld(figureSpawnCenterCell);
             
-            fallingFigure = SpawnFigure(figureType, figureState, figureSpawnCenter);
+            fallingFigure = InstantiateFigure(figureType, figureState, figureSpawnCenter);
             fallingFigure.SetupFigure();
             UpdateFigureCell(fallingFigure);
             
-            var figureCenter = fallingFigure.GetWorldCenter();
+            var figureCenter = fallingFigure.GetWorldCenter(worldGrid);
             var figureOffset = figureSpawnCenter - figureCenter;
             fallingFigure.transform.position += figureOffset;
             UpdateFigureCell(fallingFigure);
 
+            for (var i = 0; i < (int)figureState; i++)
+            {
+                if (IsPossibleRotateFigure())
+                {
+                    RotateFigure();
+                }
+                else break;
+            }
+            
             if (!CheckFigureIntersectWithTower(fallingFigure)) return false;
             
             UpdateBlocksPosition(fallingFigure, 0f);
@@ -147,7 +156,7 @@ namespace Game.Scripts.WorldSystems
         {
             var rotation = Quaternion.Euler(0f, 0, 90f);
             //var centerOfRotation = worldGrid.GetCellCenterWorld(worldGrid.WorldToCell(fallingFigure.GetWorldCenter()));
-            var centerOfRotation = fallingFigure.GetWorldCenter();
+            var centerOfRotation = fallingFigure.GetWorldRotationCenter(worldGrid);
             for (var i = 0; i < fallingFigure.BlocksCount; i++)
             {
                 var block = fallingFigure.GetBlock(i);
@@ -177,7 +186,7 @@ namespace Game.Scripts.WorldSystems
         {
             var rotation = Quaternion.Euler(0f, 0, 90f);
             //var centerOfRotation = worldGrid.GetCellCenterWorld(worldGrid.WorldToCell(fallingFigure.GetWorldCenter()));
-            var centerOfRotation = fallingFigure.GetWorldCenter();
+            var centerOfRotation = fallingFigure.GetWorldRotationCenter(worldGrid);
             for (var i = 0; i < fallingFigure.BlocksCount; i++)
             {
                 var block = fallingFigure.GetBlock(i);
@@ -229,10 +238,11 @@ namespace Game.Scripts.WorldSystems
             }
         }
         
-        private FigureController SpawnFigure(FigureType figureType, FigureState figureState, Vector2 spawnPosition)
+        private FigureController InstantiateFigure(FigureType figureType, FigureState figureState, Vector2 spawnPosition)
         {
             var figureProfile = figureStorage.GetFigureProfile(figureType);
-            var figureAsset = figureProfile.GetFigure(figureState);
+            //var figureAsset = figureProfile.GetFigure(figureState);
+            var figureAsset = figureProfile.GetFigureDefault();
 
             var figurePrefab = figureAsset.GetPrefab();
 

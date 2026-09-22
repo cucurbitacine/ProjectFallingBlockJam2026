@@ -23,6 +23,8 @@ namespace Game.Scripts.CameraSystem
                 gameLevel = tLevel;
 
                 UpdateFollowPosition();
+
+                gameLevel.GameStateChanged += OnGameStateChanged;
                 
                 isPlaying = true;
             }
@@ -31,22 +33,33 @@ namespace Game.Scripts.CameraSystem
         public override void DisableCamera()
         {
             isPlaying = false;
+            gameLevel.GameStateChanged -= OnGameStateChanged;
             
             base.DisableCamera();
         }
 
         private void UpdateFollowPosition()
         {
-            var y = gameLevel.GetCurrentHeight();
-            followAnchor.transform.position = Vector3.up * y;
+            if (gameLevel.GetGameState() is GameState.Fail)
+            {
+                followAnchor.transform.position = gameLevel.GetPlayer().PlayerTransform.Get().position;
+            }
+            else
+            {
+                var y = gameLevel.GetCurrentHeight();
+                followAnchor.transform.position = Vector3.up * y;
+            }
+        }
+        
+        private void OnGameStateChanged(GameState exit, GameState enter)
+        {
         }
         
         private void LateUpdate()
         {
-            if (isPlaying)
-            {
-                UpdateFollowPosition();
-            }
+            if (!isPlaying) return;
+
+            UpdateFollowPosition();
         }
     }
 }

@@ -6,6 +6,8 @@ namespace Game.Scripts
     [DisallowMultipleComponent]
     public class FigureController : MonoBehaviour
     {
+        [SerializeField] private BlockController rotationBlock;
+        
         private readonly List<BlockController> blocks = new List<BlockController>();
 
         public int BlocksCount => blocks.Count;
@@ -43,14 +45,14 @@ namespace Game.Scripts
             return new Vector3Int(figureMax.x - figureMin.x + 1, figureMax.y - figureMin.y + 1);
         }
         
-        public Vector3 GetWorldCenter()
+        public Vector3 GetWorldCenter(Grid grid)
         {
             if (BlocksCount == 0) return transform.position;
             
             var worldCenter = Vector3.zero;
             for (var i = 0; i < BlocksCount; i++)
             {
-                worldCenter += GetBlock(i).GetWorldCenter();
+                worldCenter += grid.GetCellCenterWorld(GetBlock(i).GetCell());
             }
             worldCenter /= BlocksCount;
             
@@ -59,7 +61,12 @@ namespace Game.Scripts
         
         public Vector3 GetWorldRotationCenter(Grid grid)
         {
-            return transform.position; // TODO can help te avoid unwanted offset after rotation
+            if (rotationBlock && blocks.Contains(rotationBlock))
+            {
+                return grid.GetCellCenterWorld(rotationBlock.GetCell());
+            }
+            
+            return GetWorldCenter(grid);
         }
         
         public void SetupFigure()
