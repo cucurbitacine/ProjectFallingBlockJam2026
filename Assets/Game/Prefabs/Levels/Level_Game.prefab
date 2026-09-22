@@ -56,7 +56,12 @@ MonoBehaviour:
   maxReachedHeight: 0
   regularGameTick: 1
   maxFallDistance: 2.5
-  fallingGameTick: 0.1
+  maxSafeFigureDisposition: 0.1
+  maxTimeoutWithoutGetHeight: 15
+  rewardTimeForGetHeight: 2
+  rewardTimeForDestroyLine: 10
+  deathImpulse: 10
+  fallingGameTick: 0.075
   nextFigureType: 0
   nextFigureRotation: 0
   figureSpawnHeight: 10

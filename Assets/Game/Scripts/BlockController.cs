@@ -7,6 +7,7 @@ namespace Game.Scripts
     public class BlockController : MonoBehaviour
     {
         [SerializeField] private Vector3Int localCell;
+        [SerializeField] private SpriteRenderer sprite;
         
         private Collider2D _collider;
 
@@ -23,6 +24,11 @@ namespace Game.Scripts
         public Collider2D GetCollider()
         {
             return _collider;
+        }
+        
+        public SpriteRenderer GetSpriteRenderer()
+        {
+            return sprite;
         }
         
         private void Awake()

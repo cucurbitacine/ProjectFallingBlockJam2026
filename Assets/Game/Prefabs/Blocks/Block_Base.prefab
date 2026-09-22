@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3390474655453045199}
   - component: {fileID: 1000191769762634059}
   m_Layer: 7
-  m_Name: Block
+  m_Name: Block_Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -175,4 +175,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbf37ecd396066443a05b0526ba78c7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.BlockEntity
-  localPosition: {x: 0, y: 0}
+  localCell: {x: 0, y: 0, z: 0}
+  sprite: {fileID: 7536622135098691204}

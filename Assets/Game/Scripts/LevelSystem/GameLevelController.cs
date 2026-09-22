@@ -21,7 +21,14 @@ namespace Game.Scripts.LevelSystem
         [SerializeField] private float regularGameTick = 1.0f;
         [Min(0f)]
         [SerializeField] private float maxFallDistance = 2.5f;
+        [Min(0f)]
         [SerializeField] private float maxSafeFigureDisposition = 0.1f;
+        [Min(0f)]
+        [SerializeField] private float maxTimeoutWithoutGetHeight = 15f;
+        [Min(0f)]
+        [SerializeField] private float rewardTimeForGetHeight = 5f;
+        [Min(0f)]
+        [SerializeField] private float rewardTimeForDestroyLine = 10f;
         [SerializeField] private float deathImpulse = 10;
         
         [Header("Figures Settings")]
@@ -47,6 +54,7 @@ namespace Game.Scripts.LevelSystem
         private bool isPlaying;
         private float tickTimeout = 0f;
         private float restTimeout = 0f;
+        private float timeoutWithoutGetHeight = 0f;
         private bool isFastFalling = false;
         
         private PawnPlayerController pawnPlayer;
@@ -132,6 +140,8 @@ namespace Game.Scripts.LevelSystem
             if (exitState is GameState.Initializing)
             {
                 SetPawnCallbacks();
+
+                timeoutWithoutGetHeight = maxTimeoutWithoutGetHeight;
             }
             else if (exitState is GameState.Falling)
             {
@@ -182,7 +192,12 @@ namespace Game.Scripts.LevelSystem
         {
             restTimeout = 0f;
             gridWorld.MergeFigure();
-            gridWorld.DestroyFullLines();
+
+            for (int i = 0; i < gridWorld.DestroyFullLines(); i++)
+            {
+                timeoutWithoutGetHeight += rewardTimeForDestroyLine;
+            }
+            
             RandomizeNextFigure();
         }
         
@@ -220,16 +235,28 @@ namespace Game.Scripts.LevelSystem
                     {
                         gridWorld.SkipFigure();
                         ChangeState(GameState.Consequence);
+                        return;
                     }
                 }
                 else
                 {
                     ChangeState(GameState.Consequence);
+                    return;
                 }
             }
             else
             {
                 tickTimeout += deltaTime;
+            }
+
+            if (timeoutWithoutGetHeight <= 0f)
+            {
+                Fail(FailReason.DidntGetHigher);
+                return;
+            }
+            else
+            {
+                timeoutWithoutGetHeight -= deltaTime;
             }
         }
         
@@ -238,11 +265,24 @@ namespace Game.Scripts.LevelSystem
             if (restTimeout >= restBetweenFigures)
             {
                 ChangeState(GameState.Falling);
+                return;
             }
             else
             {
                 restTimeout += deltaTime;
             }
+            
+            /*
+            if (timeoutWithoutGetHeight <= 0f)
+            {
+                Fail(FailReason.DidntGetHigher);
+                return;
+            }
+            else
+            {
+                timeoutWithoutGetHeight -= deltaTime;
+            }
+            */
         }
 
         private void Fail(FailReason reason)
@@ -362,7 +402,8 @@ namespace Game.Scripts.LevelSystem
 
             if (SetMaxReachedHeight(playerCell.y))
             {
-                // TODO Reset timer
+                //timeoutWithoutGetHeight = maxTimeoutWithoutGetHeight;
+                timeoutWithoutGetHeight += rewardTimeForGetHeight;
             }
         }
 
@@ -376,7 +417,7 @@ namespace Game.Scripts.LevelSystem
         
         private void OnPlayerTriggerEnter(Collider2D other)
         {
-            throw new NotImplementedException();
+            // TODO hit by projectiles
         }
 
         private void OnPlayerCollisionEnter(Collision2D other)
@@ -479,6 +520,11 @@ namespace Game.Scripts.LevelSystem
                 Gizmos.color = Color.cyan;
                 Gizmos.DrawWireCube(Vector3.up * GetMaxReachedHeight() + Vector3.up * 0.5f, new Vector3(10, 1));
             }
+        }
+
+        private void OnGUI()
+        {
+            GUILayout.Box($"{timeoutWithoutGetHeight:F2} sec");
         }
 
         #endregion

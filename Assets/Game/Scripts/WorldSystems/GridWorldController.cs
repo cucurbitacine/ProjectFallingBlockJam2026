@@ -12,6 +12,8 @@ namespace Game.Scripts.WorldSystems
         [SerializeField] private FigureController fallingFigure;
         //[SerializeField]
         private readonly Dictionary<int, List<BlockController>> tower = new Dictionary<int, List<BlockController>>();
+
+        [SerializeField] private List<SpriteRenderer> hints = new List<SpriteRenderer>();
         
         [Header("Settings")]
         [Min(0f)]
@@ -244,8 +246,10 @@ namespace Game.Scripts.WorldSystems
             }
         }
         
-        public void DestroyFullLines()
+        public int DestroyFullLines()
         {
+            var destroyedLineCount = 0;
+            
             foreach (var (height, blocks) in GetTower())
             {
                 var isFullLine = true;
@@ -259,7 +263,10 @@ namespace Game.Scripts.WorldSystems
                 if (!isFullLine) continue;
 
                 DestroyLine(height, blocks);
+                destroyedLineCount++;
             }
+
+            return destroyedLineCount;
         }
 
         public bool IsLowerThen(float height)
@@ -403,6 +410,72 @@ namespace Game.Scripts.WorldSystems
                 DestroyLine(height, blocks);
             }
         }
+
+        private void UpdateHint(FigureController figure, float deltaTime)
+        {
+            if (figure == null)
+            {
+                foreach (var hint in hints)
+                {
+                    hint.enabled = false;
+                }
+                
+                return;
+            }
+            
+            var minCount = Mathf.Min(figure.BlocksCount, hints.Count);
+
+            if (minCount == 0)
+            {
+                foreach (var hint in hints)
+                {
+                    hint.enabled = false;
+                }
+                
+                return;
+            }
+
+            IsPossibleMoveFigureY(-1000, out var maxOffset);
+            
+            for (var i = 0; i < hints.Count; i++)
+            {
+                var hint = hints[i];
+                
+                if (i < minCount)
+                {
+                    var block = figure.GetBlock(i);
+                    var fallCell = block.GetCell() + Vector3Int.down * maxOffset;
+                    var fallPoint = GetGrid().GetCellCenterWorld(fallCell);
+                    if (hint.enabled)
+                    {
+                        /*
+                        if (deltaTime > 0f)
+                        {
+                            fallPoint = Vector2.Lerp(hint.transform.position, fallPoint,
+                                deltaTime * figureFallingSpeed);
+                        }
+                        */
+                        hint.transform.position = fallPoint;
+                    }
+                    else
+                    {
+                        var blockSprite = block.GetSpriteRenderer();
+                        if (blockSprite)
+                        {
+                            hint.sprite = blockSprite.sprite;
+                        }
+                        
+                        hint.transform.position = fallPoint;
+                        hint.enabled = true;
+                    }
+                    
+                }
+                else
+                {
+                    hint.enabled = false;
+                }
+            }
+        }
         
         #endregion
         
@@ -412,6 +485,8 @@ namespace Game.Scripts.WorldSystems
             {
                 UpdateBlocksPosition(fallingFigure, Time.deltaTime);
             }
+            
+            UpdateHint(fallingFigure, Time.deltaTime);
         }
 
         private void OnDrawGizmos()
