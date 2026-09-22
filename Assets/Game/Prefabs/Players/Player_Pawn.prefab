@@ -48,7 +48,9 @@ MonoBehaviour:
   <PlayerTransform>k__BackingField:
     playerTransform: {fileID: 7986684205417881065}
   pawn: {fileID: 4313512318340067572}
-  builder: {fileID: 0}
+  health: {fileID: 7035485044417479156}
+  collision: {fileID: 8370641395616170075}
+  trigger: {fileID: 2474359937245912550}
   moveAction: {fileID: -1680190386980627800, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   jumpAction: {fileID: -2099379676528639254, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
 --- !u!1001 &8958157523844310451
@@ -108,6 +110,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 390f87776165d0740b7a06ed7b17dd78, type: 3}
+--- !u!114 &2474359937245912550 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6775513421052622933, guid: 390f87776165d0740b7a06ed7b17dd78, type: 3}
+  m_PrefabInstance: {fileID: 8958157523844310451}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e00cf75c8ee447f8bcb4a4ede6ea338, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.CombatSystem.Trigger2DEvent
 --- !u!114 &4313512318340067572 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5155891872460559687, guid: 390f87776165d0740b7a06ed7b17dd78, type: 3}
@@ -119,8 +132,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1331bafc5337482e8850cc8b5af3b0b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.PlayerSystem.PawnSystem.PlayerPawnController
+--- !u!114 &7035485044417479156 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2158020892673205319, guid: 390f87776165d0740b7a06ed7b17dd78, type: 3}
+  m_PrefabInstance: {fileID: 8958157523844310451}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc086350fc838c84b8ef67c7129d571f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.CombatSystem.Health
 --- !u!4 &7986684205417881065 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1335214167612487770, guid: 390f87776165d0740b7a06ed7b17dd78, type: 3}
   m_PrefabInstance: {fileID: 8958157523844310451}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8370641395616170075 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 611285798122841576, guid: 390f87776165d0740b7a06ed7b17dd78, type: 3}
+  m_PrefabInstance: {fileID: 8958157523844310451}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a9d7b7e7c64434187b84245821f3ff7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.CombatSystem.Collision2DEvent

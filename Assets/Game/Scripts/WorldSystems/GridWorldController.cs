@@ -1,11 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Game.Scripts.Core.WorldSystem;
-using Unity.VisualScripting;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Game.Scripts.WorldSystems
 {
@@ -13,7 +10,8 @@ namespace Game.Scripts.WorldSystems
     {
         [Header("Grid World")]
         [SerializeField] private FigureController fallingFigure;
-        [SerializeField] private Dictionary<int, List<BlockController>> tower = new Dictionary<int, List<BlockController>>();
+        //[SerializeField]
+        private readonly Dictionary<int, List<BlockController>> tower = new Dictionary<int, List<BlockController>>();
         
         [Header("Settings")]
         [Min(0f)]
@@ -25,29 +23,51 @@ namespace Game.Scripts.WorldSystems
         [SerializeField] private Transform figureContainer;
         [SerializeField] private Grid worldGrid;
         [SerializeField] private FigureProfileStorageAsset figureStorage;
+
+        #region Public API
+
+        public event Action<FigureController, GridWorldController> FigureMerged;
+        public event Action<int, GridWorldController> LineDestroyed;
         
-        public Grid GetWorldGrid()
+        public Grid GetGrid()
         {
             return worldGrid;
         }
 
-        public bool LaunchFigureAtHeight(FigureType figureType, FigureState figureState, int height)
+        public Dictionary<int, List<BlockController>> GetTower()
         {
+            return tower;
+        }
+        
+        public FigureController GetFallingFigure()
+        {
+            return fallingFigure;
+        }
+        
+        public bool LaunchFigureAtHeight(FigureType figureType, FigureRotation figureRotation, int height)
+        {
+            var grid = GetGrid();
+            
+            // Merge previous Figure
             MergeFigure();
             
+            // Where should be falling position
             var figureSpawnCenterCell = new Vector3Int(0, height);
-            var figureSpawnCenter = worldGrid.CellToWorld(figureSpawnCenterCell);
+            var figureSpawnCenter = grid.CellToWorld(figureSpawnCenterCell);
             
-            fallingFigure = InstantiateFigure(figureType, figureState, figureSpawnCenter);
+            // Spawn and initial cell setup
+            fallingFigure = InstantiateFigure(figureType, figureSpawnCenter);
             fallingFigure.SetupFigure();
             UpdateFigureCell(fallingFigure);
             
-            var figureCenter = fallingFigure.GetWorldCenter(worldGrid);
+            // Offset to falling position
+            var figureCenter = fallingFigure.GetWorldCenter(grid);
             var figureOffset = figureSpawnCenter - figureCenter;
             fallingFigure.transform.position += figureOffset;
             UpdateFigureCell(fallingFigure);
 
-            for (var i = 0; i < (int)figureState; i++)
+            // Do random rotation
+            for (var i = 0; i < (int)figureRotation; i++)
             {
                 if (IsPossibleRotateFigure())
                 {
@@ -56,30 +76,36 @@ namespace Game.Scripts.WorldSystems
                 else break;
             }
             
-            if (!CheckFigureIntersectWithTower(fallingFigure)) return false;
+            // Check if it hits tower
+            if (!CheckFigureIntersectWithTower(fallingFigure))
+            {
+                return false;
+            }
             
+            // Move all blocks
             UpdateBlocksPosition(fallingFigure, 0f);
             return true;
         }
         
-        public bool IsPossibleMoveFigureY(int offset)
+        public bool IsPossibleMoveFigureY(int offset, out int maxOffset)
         {
-            // Check every block in Figure
-            for (var i = 0; i < fallingFigure.BlocksCount; i++)
+            maxOffset = 0;
+            
+            // Check every Step
+            for (var step = 1; step <= Mathf.Abs(offset); step++)
             {
-                var block = fallingFigure.GetBlock(i);
-                var blockCell = block.GetCell();
-
-                // Check every Step
-                for (var step = 1; step <= Mathf.Abs(offset); step++)
+                // Check every block in Figure
+                for (var i = 0; i < fallingFigure.BlocksCount; i++)
                 {
+                    var block = fallingFigure.GetBlock(i);
+                    var blockCell = block.GetCell();
                     var y = blockCell.y + (int)Mathf.Sign(offset) * step;
 
                     //Check Ground
                     if (y < gridBoundY.x) return false;
                     if (y > gridBoundY.y) return false;
 
-                    if (tower.TryGetValue(y, out var line))
+                    if (GetTower().TryGetValue(y, out var line))
                     {
                         // Check every block in Line
                         foreach (var blockInLine in line)
@@ -92,6 +118,8 @@ namespace Game.Scripts.WorldSystems
                         }
                     }
                 }
+                    
+                maxOffset++;
             }
 
             return true;
@@ -106,25 +134,26 @@ namespace Game.Scripts.WorldSystems
                 block.SetCell(blockCell);
             }
         }
-
-        public bool IsPossibleMoveFigureX(int offset)
+        
+        public bool IsPossibleMoveFigureX(int offset, out int maxOffset)
         {
-            // Check every block in Figure
-            for (var i = 0; i < fallingFigure.BlocksCount; i++)
+            maxOffset = 0;
+            
+            // Check every Step
+            for (var step = 1; step <= Mathf.Abs(offset); step++)
             {
-                var block = fallingFigure.GetBlock(i);
-                var blockCell = block.GetCell();
-
-                // Check every Step
-                for (var step = 1; step <= Mathf.Abs(offset); step++)
+                // Check every block in Figure
+                for (var i = 0; i < fallingFigure.BlocksCount; i++)
                 {
+                    var block = fallingFigure.GetBlock(i);
+                    var blockCell = block.GetCell();
                     var x = blockCell.x + (int)Mathf.Sign(offset) * step;
                     
                     //Check Ground
                     if (x < gridBoundX.x) return false;
                     if (x > gridBoundX.y) return false;
                     
-                    if (tower.TryGetValue(blockCell.y, out var line))
+                    if (GetTower().TryGetValue(blockCell.y, out var line))
                     {
                         // Check every block in Line
                         foreach (var blockInLine in line)
@@ -137,8 +166,10 @@ namespace Game.Scripts.WorldSystems
                         }
                     }
                 }
+                    
+                maxOffset++;
             }
-
+            
             return true;
         }
         
@@ -154,23 +185,24 @@ namespace Game.Scripts.WorldSystems
         
         public bool IsPossibleRotateFigure()
         {
+            var grid = GetGrid();
+            
             var rotation = Quaternion.Euler(0f, 0, 90f);
-            //var centerOfRotation = worldGrid.GetCellCenterWorld(worldGrid.WorldToCell(fallingFigure.GetWorldCenter()));
-            var centerOfRotation = fallingFigure.GetWorldRotationCenter(worldGrid);
+            var centerOfRotation = fallingFigure.GetWorldRotationCenter(grid);
             for (var i = 0; i < fallingFigure.BlocksCount; i++)
             {
                 var block = fallingFigure.GetBlock(i);
                 var blockCell = block.GetCell();
-                var blockCenter = worldGrid.GetCellCenterWorld(blockCell);
+                var blockCenter = grid.GetCellCenterWorld(blockCell);
                 var blockVector = blockCenter - centerOfRotation;
                 var blockVectorRotated = rotation * blockVector;
                 var blockCenterRotated = blockVectorRotated + centerOfRotation;
-                var blockCellRotated = worldGrid.WorldToCell(blockCenterRotated);
+                var blockCellRotated = grid.WorldToCell(blockCenterRotated);
 
                 if (blockCellRotated.x < gridBoundX.x || blockCellRotated.x > gridBoundX.y) return false;
                 if (blockCellRotated.y < gridBoundY.x || blockCellRotated.y > gridBoundY.y) return false;
                 
-                if (tower.TryGetValue(blockCellRotated.y, out var line))
+                if (GetTower().TryGetValue(blockCellRotated.y, out var line))
                 {
                     if (line.Any(b => b.GetCell().x == blockCellRotated.x))
                     {
@@ -184,18 +216,19 @@ namespace Game.Scripts.WorldSystems
 
         public void RotateFigure()
         {
+            var grid = GetGrid();
+            
             var rotation = Quaternion.Euler(0f, 0, 90f);
-            //var centerOfRotation = worldGrid.GetCellCenterWorld(worldGrid.WorldToCell(fallingFigure.GetWorldCenter()));
-            var centerOfRotation = fallingFigure.GetWorldRotationCenter(worldGrid);
+            var centerOfRotation = fallingFigure.GetWorldRotationCenter(grid);
             for (var i = 0; i < fallingFigure.BlocksCount; i++)
             {
                 var block = fallingFigure.GetBlock(i);
                 var blockCell = block.GetCell();
-                var blockCenter = worldGrid.GetCellCenterWorld(blockCell);
+                var blockCenter = grid.GetCellCenterWorld(blockCell);
                 var blockVector = blockCenter - centerOfRotation;
                 var blockVectorRotated = rotation * blockVector;
                 var blockCenterRotated = blockVectorRotated + centerOfRotation;
-                var blockCellRotated = worldGrid.WorldToCell(blockCenterRotated);
+                var blockCellRotated = grid.WorldToCell(blockCenterRotated);
                 block.SetCell(blockCellRotated);
                 UpdateBlockPosition(block, 0f);
             }
@@ -211,34 +244,48 @@ namespace Game.Scripts.WorldSystems
             }
         }
         
-        public void ClearFullLines()
+        public void DestroyFullLines()
         {
-            foreach (var line in tower)
+            foreach (var (height, blocks) in GetTower())
             {
-                var fullLine = true;
+                var isFullLine = true;
                 for (var x = gridBoundX.x; x <= gridBoundX.y; x++)
                 {
-                    if (line.Value.All(b => b.GetCell().x != x))
-                    {
-                        fullLine = false;
-                    }
+                    if (blocks.Any(b => b.GetCell().x == x)) continue;
+                    isFullLine = false;
+                    break;
+                }
 
-                    if (!fullLine) break;
-                }
-                
-                if (fullLine)
-                {
-                    foreach (var block in line.Value)
-                    {
-                        Destroy(block.gameObject);
-                    }
-                    
-                    line.Value.Clear();
-                }
+                if (!isFullLine) continue;
+
+                DestroyLine(height, blocks);
             }
         }
+
+        public bool IsLowerThen(float height)
+        {
+            for (var i = 0; i < fallingFigure.BlocksCount; i++)
+            {
+                var block = fallingFigure.GetBlock(i);
+                var blockCell = block.GetCell();
+                var blockWorldCenter = GetGrid().GetCellCenterWorld(blockCell);
+                if (blockWorldCenter.y >= height) return false;
+            }
+            
+            return true;
+        }
+
+        public void SkipFigure()
+        {
+            Destroy(fallingFigure.gameObject);
+            fallingFigure = null;
+        }
         
-        private FigureController InstantiateFigure(FigureType figureType, FigureState figureState, Vector2 spawnPosition)
+        #endregion
+
+        #region Private API
+
+        private FigureController InstantiateFigure(FigureType figureType, Vector2 spawnPosition)
         {
             var figureProfile = figureStorage.GetFigureProfile(figureType);
             //var figureAsset = figureProfile.GetFigure(figureState);
@@ -260,12 +307,14 @@ namespace Game.Scripts.WorldSystems
         private void UpdateBlockCell(BlockController block)
         {
             var blockCenter = block.GetWorldCenter();
-            var blockCell = worldGrid.WorldToCell(blockCenter);
+            var blockCell = GetGrid().WorldToCell(blockCenter);
             block.SetCell(blockCell);
         }
         
         private void MergeFigure(FigureController figure)
         {
+            var towerTarget = GetTower();
+            
             for (var i = 0; i < figure.BlocksCount; i++)
             {
                 var block = figure.GetBlock(i);
@@ -273,10 +322,10 @@ namespace Game.Scripts.WorldSystems
 
                 UpdateBlockPosition(block, 0f);
                 
-                if (!tower.TryGetValue(blockCell.y, out var row))
+                if (!towerTarget.TryGetValue(blockCell.y, out var row))
                 {
                     row = new List<BlockController>();
-                    tower[blockCell.y] = row;
+                    towerTarget[blockCell.y] = row;
                 }
 
                 if (!row.Contains(block))
@@ -284,6 +333,8 @@ namespace Game.Scripts.WorldSystems
                     row.Add(block);
                 }
             }
+            
+            FigureMerged?.Invoke(figure, this);
         }
 
         private void UpdateBlocksPosition(FigureController figure, float deltaTime)
@@ -297,7 +348,7 @@ namespace Game.Scripts.WorldSystems
         
         private void UpdateBlockPosition(BlockController block, float deltaTime)
         {
-            var targetPosition = worldGrid.GetCellCenterWorld(block.GetCell());
+            var targetPosition = GetGrid().GetCellCenterWorld(block.GetCell());
             
             if (deltaTime > 0f)
             {
@@ -313,7 +364,7 @@ namespace Game.Scripts.WorldSystems
             {
                 var block = figure.GetBlock(i);
                 var blockCell = block.GetCell();
-                if (tower.TryGetValue(blockCell.y, out var line))
+                if (GetTower().TryGetValue(blockCell.y, out var line))
                 {
                     if (line.Any(b => b.GetCell().x == blockCell.x))
                     {
@@ -324,6 +375,36 @@ namespace Game.Scripts.WorldSystems
 
             return true;
         }
+
+        private void DestroyLine(int height, List<BlockController> blocks)
+        {
+            try
+            {
+                LineDestroyed?.Invoke(height, this);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+            }
+            finally
+            {
+                foreach (var block in blocks)
+                {
+                    Destroy(block.gameObject);
+                }
+                blocks.Clear();
+            }
+        }
+        
+        private void DestroyLine(int height)
+        {
+            if (GetTower().TryGetValue(height, out var blocks))
+            {
+                DestroyLine(height, blocks);
+            }
+        }
+        
+        #endregion
         
         private void Update()
         {
@@ -335,32 +416,42 @@ namespace Game.Scripts.WorldSystems
 
         private void OnDrawGizmos()
         {
-            if (!worldGrid) return;
+            var grid = GetGrid();
+            if (!grid) return;
             Gizmos.color = Color.softRed;
-            var min = worldGrid.CellToWorld(new Vector3Int(gridBoundX.x, gridBoundY.x));
-            var max = worldGrid.CellToWorld(new Vector3Int(gridBoundX.y, gridBoundY.y)) + worldGrid.cellSize;
+            var min = grid.CellToWorld(new Vector3Int(gridBoundX.x, gridBoundY.x));
+            var max = grid.CellToWorld(new Vector3Int(gridBoundX.y, gridBoundY.y)) + grid.cellSize;
             var gridBoundCenter = (max + min) * 0.5f;
             var gridBoundSize = max - min;
             Gizmos.DrawWireCube(gridBoundCenter, gridBoundSize);
-        }
 
-        public bool IsLowerThen(float height)
-        {
-            for (var i = 0; i < fallingFigure.BlocksCount; i++)
+            if (fallingFigure)
             {
-                var block = fallingFigure.GetBlock(i);
-                var blockCell = block.GetCell();
-                var blockWorldCenter = worldGrid.GetCellCenterWorld(blockCell);
-                if (blockWorldCenter.y >= height) return false;
+                IsPossibleMoveFigureY(-1000, out var maxOffset);
+
+                if (maxOffset > 0)
+                {
+                    for (var i = 0; i < fallingFigure.BlocksCount; i++)
+                    {
+                        var fallCell = fallingFigure.GetBlock(i).GetCell() + Vector3Int.down * maxOffset;
+                        var fallPoint = GetGrid().GetCellCenterWorld(fallCell);
+                        Gizmos.DrawWireSphere(fallPoint, 0.2f);
+                    }
+                }
             }
-            
-            return true;
+        }
+    }
+
+    public static class GridWorldExtension
+    {
+        public static bool IsPossibleMoveFigureY(this GridWorldController world, int offset)
+        {
+            return world.IsPossibleMoveFigureY(offset, out _);
         }
 
-        public void SkipFigure()
+        public static bool IsPossibleMoveFigureX(this GridWorldController world, int offset)
         {
-            Destroy(fallingFigure.gameObject);
-            fallingFigure = null;
+            return world.IsPossibleMoveFigureX(offset, out _);
         }
     }
 }

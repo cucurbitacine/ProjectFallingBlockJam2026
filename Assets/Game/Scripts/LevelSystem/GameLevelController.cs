@@ -11,34 +11,38 @@ namespace Game.Scripts.LevelSystem
 {
     public class GameLevelController : LevelController
     {
-        [Header("Game Level")]
+        [Header("Game State")]
         [SerializeField] private GameState gameState = GameState.Unknown;
-        [SerializeField] private FigureType nextFigureType;
-        [SerializeField] private FigureState nextFigureState;
-        
         [Min(0)]
-        [SerializeField] private int currentHeight = 0;
-        [Min(0)]
-        [SerializeField] private int figureSpawnHeight = 20;
+        [SerializeField] private int maxReachedHeight = 0;
         
-        [Header("Settings")]
+        [Header("Game Settings")]
         [Min(0f)]
-        [SerializeField] private float gameTick = 0.5f;
-        [SerializeField] private float fastGameTick = 0.1f;
-        [Min(0f)]
-        [SerializeField] private float restBetweenFigures = 1f;
+        [SerializeField] private float regularGameTick = 1.0f;
         [Min(0f)]
         [SerializeField] private float maxFallDistance = 2.5f;
+        [SerializeField] private float maxSafeFigureDisposition = 0.1f;
+        [SerializeField] private float deathImpulse = 10;
         
-        [Header("Required")]
-        [SerializeField] private Transform spawnPoint;
-        [SerializeField] private LevelSceneAsset menuLevelScene;
-
-        [Header("Input Build")]
+        [Header("Figures Settings")]
+        [Min(0f)]
+        [SerializeField] private float fallingGameTick = 0.1f;
+        [SerializeField] private FigureType nextFigureType;
+        [SerializeField] private FigureRotation nextFigureRotation;
+        [Min(0)]
+        [SerializeField] private int figureSpawnHeight = 10;
+        [Min(0f)]
+        [SerializeField] private float restBetweenFigures = 1f;
+        
+        [Header("Build Input")]
         [SerializeField] private InputActionReference leftAction;
         [SerializeField] private InputActionReference rightAction;
         [SerializeField] private InputActionReference rotateAction;
         [SerializeField] private InputActionReference downAction;
+
+        [Header("Required")]
+        [SerializeField] private Transform spawnPoint;
+        [SerializeField] private LevelSceneAsset menuLevelScene;
         
         private bool isPlaying;
         private float tickTimeout = 0f;
@@ -49,9 +53,12 @@ namespace Game.Scripts.LevelSystem
         private GridWorldController gridWorld;
         
         private FigureType[] figureTypes;
-        private FigureState[] figureStates;
-        
-        public event Action<GameState, GameState> GameStateChanged; 
+        private FigureRotation[] figureStates;
+
+        #region Public API
+
+        public event Action<GameState, GameState> GameStateChanged;
+        public event Action<FailReason> GameFailed;
         
         [ContextMenu(nameof(ReturnMenuLevel))]
         public void ReturnMenuLevel()
@@ -66,14 +73,18 @@ namespace Game.Scripts.LevelSystem
 
         public float GetGameTick()
         {
-            return isFastFalling ? fastGameTick : gameTick;
+            return isFastFalling ? fallingGameTick : regularGameTick;
         }
         
-        public float GetCurrentHeight()
+        public int GetMaxReachedHeight()
         {
-            return currentHeight;
+            return maxReachedHeight;
         }
-        
+
+        #endregion
+
+        #region Override API
+
         protected override IEnumerator EnableWorld()
         {
             yield return base.EnableWorld();
@@ -100,6 +111,10 @@ namespace Game.Scripts.LevelSystem
             ChangeState(GameState.Falling);
         }
 
+        #endregion
+
+        #region Game Flow API
+
         private void ChangeState(GameState nextState)
         {
             if (gameState == nextState) return;
@@ -125,27 +140,50 @@ namespace Game.Scripts.LevelSystem
 
             if (enterState is GameState.Initializing)
             {
-                figureTypes = (FigureType[])Enum.GetValues(typeof(FigureType));
-                figureStates = (FigureState[])Enum.GetValues(typeof(FigureState));
-                RandomizeNextFigure();
+                EnterInitializing();
             }
             else if (enterState is GameState.Falling)
             {
-                SetBuildCallbacks();
-                tickTimeout = 0f;
-                gridWorld.LaunchFigureAtHeight(nextFigureType, nextFigureState, currentHeight + figureSpawnHeight);
+                EnterFalling();
             }
             else if (enterState is GameState.Consequence)
             {
-                restTimeout = 0f;
-                gridWorld.MergeFigure();
-                gridWorld.ClearFullLines();
-                RandomizeNextFigure();
+                EnterConsequence();
             }
             else if (enterState is GameState.Fail or GameState.Success)
             {
                 RemovePawnCallbacks();
             }
+        }
+
+        private void EnterInitializing()
+        {
+            figureTypes = (FigureType[])Enum.GetValues(typeof(FigureType));
+            figureStates = (FigureRotation[])Enum.GetValues(typeof(FigureRotation));
+            RandomizeNextFigure();
+        }
+
+        private void EnterFalling()
+        {
+            tickTimeout = 0f;
+            GetNextFigure(out var figureType, out var figureState);
+
+            if (gridWorld.LaunchFigureAtHeight(figureType, figureState, GetMaxReachedHeight() + GetFigureSpawnHeight()))
+            {
+                SetBuildCallbacks();
+            }
+            else
+            {
+                Fail(FailReason.ReachedTowerLimit);
+            }
+        }
+        
+        private void EnterConsequence()
+        {
+            restTimeout = 0f;
+            gridWorld.MergeFigure();
+            gridWorld.DestroyFullLines();
+            RandomizeNextFigure();
         }
         
         private void UpdateGame(GameState state, float deltaTime)
@@ -159,26 +197,14 @@ namespace Game.Scripts.LevelSystem
                 UpdateConsequence(deltaTime);
             }
         }
-        
-        private void UpdateConsequence(float deltaTime)
-        {
-            if (restTimeout >= restBetweenFigures)
-            {
-                ChangeState(GameState.Falling);
-            }
-            else
-            {
-                restTimeout += deltaTime;
-            }
-        }
-        
+                
         private void UpdateFalling(float deltaTime)
         {
             var playerY = pawnPlayer.PlayerTransform.Get().position.y;
-            var fallDistance = GetCurrentHeight() - playerY;
+            var fallDistance = GetMaxReachedHeight() - playerY;
             if (fallDistance > maxFallDistance)
             {
-                ChangeState(GameState.Fail);
+                Fail(FailReason.FellToLow);
                 return;
             }
             
@@ -190,7 +216,7 @@ namespace Game.Scripts.LevelSystem
                     gridWorld.MoveFigureY(down);
                     tickTimeout = 0f;
 
-                    if (gridWorld.IsLowerThen(GetCurrentHeight() - maxFallDistance))
+                    if (gridWorld.IsLowerThen(GetMaxReachedHeight() - maxFallDistance))
                     {
                         gridWorld.SkipFigure();
                         ChangeState(GameState.Consequence);
@@ -207,25 +233,47 @@ namespace Game.Scripts.LevelSystem
             }
         }
         
-        private void RandomizeNextFigure()
+        private void UpdateConsequence(float deltaTime)
         {
-            nextFigureType = figureTypes[Random.Range(0, figureTypes.Length)];
-            nextFigureState = figureStates[Random.Range(0, figureStates.Length)];
+            if (restTimeout >= restBetweenFigures)
+            {
+                ChangeState(GameState.Falling);
+            }
+            else
+            {
+                restTimeout += deltaTime;
+            }
+        }
+
+        private void Fail(FailReason reason)
+        {
+            Debug.LogWarning($"Fail: {reason}");
+            
+            ChangeState(GameState.Fail);
+            
+            GameFailed?.Invoke(reason);
         }
         
-        private Vector2 GetSpawnPoint()
-        {
-            return spawnPoint == null ? transform.position : spawnPoint.position;
-        }
+        #endregion
+
+        #region Callbacks API
 
         private void SetPawnCallbacks()
         {
             pawnPlayer.GetPawn().Landed += OnPlayerPawnLanded;
+            pawnPlayer.GetHealth().ValueChanged += OnPlayerHealthChanged;
+            pawnPlayer.GetCollisionEvent().EnterEvent += OnPlayerCollisionEnter;
+            pawnPlayer.GetTriggerEvent().EnterEvent += OnPlayerTriggerEnter;
+            pawnPlayer.SetCallbacks();
         }
 
         private void RemovePawnCallbacks()
         {
             pawnPlayer.GetPawn().Landed -= OnPlayerPawnLanded;
+            pawnPlayer.GetHealth().ValueChanged -= OnPlayerHealthChanged;
+            pawnPlayer.GetCollisionEvent().EnterEvent -= OnPlayerCollisionEnter;
+            pawnPlayer.GetTriggerEvent().EnterEvent -= OnPlayerTriggerEnter;
+            pawnPlayer.RemoveCallbacks();
         }
         
         private void SetBuildCallbacks()
@@ -310,14 +358,102 @@ namespace Game.Scripts.LevelSystem
         private void OnPlayerPawnLanded()
         {
             var playerCenter = pawnPlayer.GetPawn().GetWorldCenter();
-            var playerCell = gridWorld.GetWorldGrid().WorldToCell(playerCenter);
+            var playerCell = gridWorld.GetGrid().WorldToCell(playerCenter);
 
-            if (playerCell.y > currentHeight)
+            if (SetMaxReachedHeight(playerCell.y))
             {
-                currentHeight = playerCell.y;
+                // TODO Reset timer
+            }
+        }
+
+        private void OnPlayerHealthChanged(int prev, int curr)
+        {
+            if (curr < prev && curr == 0)
+            {
+                Fail(FailReason.LostHealth);
             }
         }
         
+        private void OnPlayerTriggerEnter(Collider2D other)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OnPlayerCollisionEnter(Collision2D other)
+        {
+            // Only during Falling 
+            if (GetGameState() != GameState.Falling) return;
+            
+            // Contact only with Block
+            if (!other.collider.TryGetComponent(out BlockController block)) return;
+
+            // Block is part of Falling figure
+            var fallingFigure = gridWorld.GetFallingFigure();
+            if (fallingFigure == null) return;
+            if (!fallingFigure.Contains(block)) return;
+
+            var firstContact = other.GetContact(0);
+            // Contact with Bottom part of block
+            if (firstContact.point.y >= block.GetWorldCenter().y) return;
+            // Contact normal looks Up or Down
+            if (!Mathf.Approximately(Vector2.Dot(firstContact.normal, Vector2.right), 0f)) return;
+
+            // Block is moving
+            var shouldBeAt = gridWorld.GetGrid().GetCellCenterWorld(block.GetCell());
+            var actuallyAt = block.GetWorldCenter();
+            var disposition = Vector2.Distance(shouldBeAt, actuallyAt);
+            if (disposition <= maxSafeFigureDisposition) return;
+            
+            Fail(FailReason.SmashedByFallingFigure);
+
+            if (pawnPlayer.GetPawn().TryGetComponent(out Collider2D shape))
+            {
+                shape.enabled = false;
+            }
+            
+            if (pawnPlayer.GetPawn().TryGetComponent(out Rigidbody2D body))
+            {
+                body.AddForce(deathImpulse * Vector2.up, ForceMode2D.Impulse);
+            }
+        }
+        
+        #endregion
+
+        #region Private API
+
+        private bool SetMaxReachedHeight(int height)
+        {
+            if (height <= maxReachedHeight) return false;
+            maxReachedHeight = height;
+            return true;
+        }
+        
+        private int GetFigureSpawnHeight()
+        {
+            return figureSpawnHeight;
+        }
+        
+        private void GetNextFigure(out FigureType figureType, out FigureRotation figureRotation)
+        {
+            figureType = nextFigureType;
+            figureRotation = nextFigureRotation;
+        }
+        
+        private void RandomizeNextFigure()
+        {
+            nextFigureType = figureTypes[Random.Range(0, figureTypes.Length)];
+            nextFigureRotation = figureStates[Random.Range(0, figureStates.Length)];
+        }
+        
+        private Vector2 GetSpawnPoint()
+        {
+            return spawnPoint == null ? transform.position : spawnPoint.position;
+        }
+
+        #endregion
+
+        #region MonoBehaviour API
+
         private void Update()
         {
             UpdateGame(GetGameState(), Time.deltaTime);
@@ -334,16 +470,18 @@ namespace Game.Scripts.LevelSystem
             if (isPlaying)
             {
                 var playerCenter = pawnPlayer.GetPawn().GetWorldCenter();
-                var playerCell = gridWorld.GetWorldGrid().WorldToCell(playerCenter);
-                var playerBlockCenter = gridWorld.GetWorldGrid().GetCellCenterWorld(playerCell);
+                var playerCell = gridWorld.GetGrid().WorldToCell(playerCenter);
+                var playerBlockCenter = gridWorld.GetGrid().GetCellCenterWorld(playerCell);
                 
                 Gizmos.color = Color.white;
-                Gizmos.DrawWireCube(playerBlockCenter, gridWorld.GetWorldGrid().cellSize);
+                Gizmos.DrawWireCube(playerBlockCenter, gridWorld.GetGrid().cellSize);
 
                 Gizmos.color = Color.cyan;
-                Gizmos.DrawWireCube(Vector3.up * currentHeight + Vector3.up * 0.5f, new Vector3(10, 1));
+                Gizmos.DrawWireCube(Vector3.up * GetMaxReachedHeight() + Vector3.up * 0.5f, new Vector3(10, 1));
             }
         }
+
+        #endregion
     }
 
     public enum GameState
@@ -354,5 +492,14 @@ namespace Game.Scripts.LevelSystem
         Consequence,
         Fail,
         Success,
+    }
+
+    public enum FailReason
+    {
+        SmashedByFallingFigure,
+        FellToLow,
+        ReachedTowerLimit,
+        LostHealth,
+        DidntGetHigher,
     }
 }

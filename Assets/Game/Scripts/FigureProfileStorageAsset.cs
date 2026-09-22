@@ -26,4 +26,12 @@ namespace Game.Scripts
         Figure_Z,
         Figure_T,
     }
+    
+    public enum FigureRotation
+    {
+        Identity = 0,
+        Rotated_90 = 1,
+        Rotated_180 = 2,
+        Rotated_270 = 3, 
+    }
 }

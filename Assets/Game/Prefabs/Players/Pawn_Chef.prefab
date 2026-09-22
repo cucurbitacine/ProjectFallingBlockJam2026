@@ -10,11 +10,13 @@ GameObject:
   m_Component:
   - component: {fileID: 1335214167612487770}
   - component: {fileID: 4766848957047364507}
-  - component: {fileID: 1273916800386959770}
   - component: {fileID: 8684011275938380589}
   - component: {fileID: 6418724813940035450}
   - component: {fileID: 5155891872460559687}
   - component: {fileID: 2555399398291381986}
+  - component: {fileID: 2158020892673205319}
+  - component: {fileID: 611285798122841576}
+  - component: {fileID: 6775513421052622933}
   m_Layer: 3
   m_Name: Pawn_Chef
   m_TagString: Untagged
@@ -65,43 +67,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!70 &1273916800386959770
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 692998443760713727}
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0.4}
-  m_Size: {x: 0.5, y: 0.8}
-  m_Direction: 0
 --- !u!61 &8684011275938380589
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -174,6 +139,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.PlayerSystem.PawnSystem.PlayerPawnController
   grounded: 0
+  worldCenter: {x: 0, y: 0.5}
   groundCheckRadius: 0.1
   groundCheckFilter:
     useTriggers: 0
@@ -191,8 +157,6 @@ MonoBehaviour:
     maxNormalAngle: 0
   moveSpeed: 4
   jumpHeight: 1.5
-  moveAction: {fileID: -1680190386980627800, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
-  jumpAction: {fileID: -2099379676528639254, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
 --- !u!114 &2555399398291381986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -207,6 +171,44 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.PlayerSystem.PawnSystem.PawnAnimatorController
   pawn: {fileID: 5155891872460559687}
   animator: {fileID: 5750593310660898426}
+--- !u!114 &2158020892673205319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 692998443760713727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc086350fc838c84b8ef67c7129d571f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.CombatSystem.Health
+  value: 5
+  maxValue: 5
+--- !u!114 &611285798122841576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 692998443760713727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a9d7b7e7c64434187b84245821f3ff7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.CombatSystem.Collision2DEvent
+--- !u!114 &6775513421052622933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 692998443760713727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e00cf75c8ee447f8bcb4a4ede6ea338, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.CombatSystem.Trigger2DEvent
 --- !u!1 &8669633535626533123
 GameObject:
   m_ObjectHideFlags: 0

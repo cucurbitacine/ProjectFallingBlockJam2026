@@ -1,4 +1,4 @@
-using System.Collections;
+using Game.Scripts.CombatSystem;
 using Game.Scripts.Core.PlayerSystem;
 using Game.Scripts.PlayerSystem.PawnSystem;
 using UnityEngine;
@@ -10,32 +10,48 @@ namespace Game.Scripts.PlayerSystem
     {
         [Header("Pawn")]
         [SerializeField] private PawnController pawn;
+        [SerializeField] private Health health;
+        [SerializeField] private Collision2DEvent collision;
+        [SerializeField] private Trigger2DEvent trigger;
 
         [Header("Input Pawn")]
         [SerializeField] private InputActionReference moveAction;
         [SerializeField] private InputActionReference jumpAction;
-        
-        public override IEnumerator EnablePlayer(CameraController camera)
-        {
-            yield return base.EnablePlayer(camera);
 
+        public void SetCallbacks()
+        {
             moveAction.action.performed += OnMove;
             moveAction.action.canceled += OnMove;
             jumpAction.action.performed += OnJump;
         }
-
-        public override void DisablePlayer()
+        
+        public void RemoveCallbacks()
         {
             moveAction.action.performed -= OnMove;
             moveAction.action.canceled -= OnMove;
             jumpAction.action.performed -= OnJump;
             
-            base.DisablePlayer();
+            pawn.Move(Vector2.zero);
         }
-
+        
         public PawnController GetPawn()
         {
             return pawn;
+        }
+        
+        public Health GetHealth()
+        {
+            return health;
+        }
+        
+        public Collision2DEvent GetCollisionEvent()
+        {
+            return collision;
+        }
+        
+        public Trigger2DEvent GetTriggerEvent()
+        {
+            return trigger;
         }
         
         private void OnMove(InputAction.CallbackContext context)

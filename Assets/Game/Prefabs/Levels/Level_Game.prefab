@@ -53,19 +53,20 @@ MonoBehaviour:
   levelParameters:
     previousSceneId: 0
   gameState: 0
+  maxReachedHeight: 0
+  regularGameTick: 1
+  maxFallDistance: 2.5
+  fallingGameTick: 0.1
   nextFigureType: 0
-  nextFigureState: 0
-  currentHeight: 0
-  figureSpawnHeight: 20
-  gameTick: 1
-  fastGameTick: 0.1
-  restBetweenFigures: 1
-  spawnPoint: {fileID: 447574453183429005}
-  menuLevelScene: {fileID: 11400000, guid: 8988f1d04fa628f41b3a2446c212d9dd, type: 2}
+  nextFigureRotation: 0
+  figureSpawnHeight: 10
+  restBetweenFigures: 2
   leftAction: {fileID: -6447267559283263229, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   rightAction: {fileID: -7413117472664654791, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   rotateAction: {fileID: -2641815146373619672, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   downAction: {fileID: -1235450418161514135, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  spawnPoint: {fileID: 447574453183429005}
+  menuLevelScene: {fileID: 11400000, guid: 8988f1d04fa628f41b3a2446c212d9dd, type: 2}
 --- !u!1 &8083003730620944324
 GameObject:
   m_ObjectHideFlags: 0

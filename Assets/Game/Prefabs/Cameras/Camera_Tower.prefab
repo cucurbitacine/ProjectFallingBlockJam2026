@@ -48,7 +48,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f950c41d479480b9019f7819b8e3916, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.CameraSystem.TowerCameraController
+  mergeNoise: {fileID: 11400000, guid: a6679dd7be6b1974191fab102c488032, type: 2}
+  mergeNoiseDuration: 0.5
+  destroyNoise: {fileID: 11400000, guid: df72483ca819de64dbee20b17e3a9867, type: 2}
+  destroyNoiseDuration: 0.5
+  noiseAmplitude:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   followAnchor: {fileID: 9175800021033012954}
+  vCam: {fileID: 5460265405469617758}
 --- !u!1 &3755794634014395794
 GameObject:
   m_ObjectHideFlags: 0
@@ -109,7 +138,7 @@ Transform:
   m_GameObject: {fileID: 5847560693065450233}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.5, z: -10}
+  m_LocalPosition: {x: 0, y: 5, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -150,7 +179,7 @@ Camera:
   far clip plane: 5000
   field of view: 40
   orthographic: 1
-  orthographic size: 4
+  orthographic size: 6
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -340,6 +369,7 @@ GameObject:
   - component: {fileID: 5460265405469617758}
   - component: {fileID: 1223092458521058920}
   - component: {fileID: 3193931477458827477}
+  - component: {fileID: 5287341783788998505}
   m_Layer: 0
   m_Name: VCam
   m_TagString: Untagged
@@ -387,7 +417,7 @@ MonoBehaviour:
     CustomLookAtTarget: 0
   Lens:
     FieldOfView: 40
-    OrthographicSize: 6
+    OrthographicSize: 7.5
     NearClipPlane: 0.1
     FarClipPlane: 5000
     Dutch: 0
@@ -444,3 +474,20 @@ MonoBehaviour:
     MaxWindowSize: 0
     Padding: 0
   m_LegacyMaxWindowSize: -2
+--- !u!114 &5287341783788998505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7845302727205795396}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68bb026fafb42b14791938953eaace77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineBasicMultiChannelPerlin
+  NoiseProfile: {fileID: 0}
+  PivotOffset: {x: 0, y: 0, z: 0}
+  AmplitudeGain: 1
+  FrequencyGain: 1
+  m_NoiseOffsets: {x: 0, y: 0, z: 0}

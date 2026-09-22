@@ -18,6 +18,11 @@ namespace Game.Scripts
             return blocks[index];
         }
         
+        public bool Contains(BlockController block)
+        {
+            return blocks.Contains(block);
+        }
+        
         public void GetMinMax(out Vector3Int figureMin, out Vector3Int figureMax)
         {
             figureMin = new Vector3Int(int.MaxValue, int.MaxValue);
