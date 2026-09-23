@@ -1,7 +1,6 @@
 using System.Collections;
 using Game.Scripts.Core.LevelSystem;
 using Game.Scripts.Core.PlayerSystem;
-using Game.Scripts.Core.WorldSystem;
 using Game.Scripts.LevelSystem;
 using Game.Scripts.WorldSystems;
 using Unity.Cinemachine;
@@ -32,9 +31,9 @@ namespace Game.Scripts.CameraSystem
         private GameLevelController gameLevel;
         private GridWorldController gridWorld;
         
-        public override IEnumerator EnableCamera(PlayerController player, WorldController world = null, LevelController level = null)
+        public override IEnumerator EnableCamera(LevelController level)
         {
-            yield return base.EnableCamera(player, world, level);
+            yield return base.EnableCamera(level);
 
             if (level && level is GameLevelController tLevel)
             {
@@ -44,7 +43,7 @@ namespace Game.Scripts.CameraSystem
                 UpdateFollowPosition();
             }
 
-            if (world && world is GridWorldController tWorld)
+            if (level.GetWorld() is GridWorldController tWorld)
             {
                 gridWorld = tWorld;
                 gridWorld.FigureMerged += OnFigureMerged;

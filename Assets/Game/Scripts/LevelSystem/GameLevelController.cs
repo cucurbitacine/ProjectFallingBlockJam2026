@@ -4,7 +4,6 @@ using Game.Scripts.CombatSystem;
 using Game.Scripts.Core.LevelSystem;
 using Game.Scripts.PlayerSystem;
 using Game.Scripts.WorldSystems;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Random = UnityEngine.Random;
@@ -23,15 +22,17 @@ namespace Game.Scripts.LevelSystem
         [SerializeField] private float regularGameTick = 1.0f;
         
         [Header("Win Settings")]
-        [Min(2)]
-        [SerializeField] private int heightToWin = 40;
+        [Min(1)]
+        [SerializeField] private int scoreToWin = 40;
+        [SerializeField] private float winImpulse = 10;
+        [SerializeField] private float winTorqueImpulse = 10;
         
         [Header("Fail Settings")]
         [Min(0)]
         [SerializeField] private int maxSafeFallHeight = 2;
         [Min(0f)]
         [SerializeField] private float maxSafeFigureDisposition = 0.1f;
-        [SerializeField] private float deathImpulse = 10;
+        [SerializeField] private float smashedImpulse = 10;
         
         [Header("Time Settings")]
         [Min(0f)]
@@ -89,6 +90,7 @@ namespace Game.Scripts.LevelSystem
 
         public event Action<GameState, GameState> GameStateChanged;
         public event Action<FailReason> GameFailed;
+        public event Action<int, int> ScoreChanged;
         
         [ContextMenu(nameof(ReturnMenuLevel))]
         public void ReturnMenuLevel()
@@ -111,6 +113,21 @@ namespace Game.Scripts.LevelSystem
             return bestCell;
         }
 
+        public float GetTimeLeft()
+        {
+            return timeLeft;
+        }
+
+        public float GetTimeMax()
+        {
+            return maxTimeout;
+        }
+
+        public int GetScore()
+        {
+            return GetBestCell().y;
+        }
+        
         #endregion
 
         #region Override API
@@ -159,6 +176,8 @@ namespace Game.Scripts.LevelSystem
 
         private void OnGameStateChanged(GameState exitState, GameState enterState)
         {
+            //Debug.Log($"{exitState} -> {enterState}");
+            
             if (exitState is GameState.Initializing)
             {
                 SetPawnCallbacks();
@@ -182,9 +201,15 @@ namespace Game.Scripts.LevelSystem
             {
                 EnterConsequence();
             }
-            else if (enterState is GameState.Fail or GameState.Win)
+            else if (enterState is GameState.Fail)
             {
                 RemovePawnCallbacks();
+            }
+            else if (enterState is GameState.Win)
+            {
+                RemovePawnCallbacks();
+                
+                EnterWin();
             }
         }
 
@@ -221,6 +246,25 @@ namespace Game.Scripts.LevelSystem
             }
             
             RandomizeNextFigure();
+        }
+        
+        private void EnterWin()
+        {
+            //Debug.Log("EnterWin");
+            
+            if (pawnPlayer.GetPawn().TryGetComponent(out Collider2D shape))
+            {
+                shape.enabled = false;
+            }
+            
+            if (pawnPlayer.GetPawn().TryGetComponent(out Rigidbody2D body))
+            {
+                body.linearVelocity = Vector2.zero;
+                body.gravityScale = 0f;
+                body.constraints = RigidbodyConstraints2D.None;
+                body.AddForce(winImpulse * Vector2.up, ForceMode2D.Impulse);
+                body.AddTorque(winTorqueImpulse, ForceMode2D.Impulse);
+            }
         }
         
         private void UpdateGame(GameState state, float deltaTime)
@@ -416,7 +460,7 @@ namespace Game.Scripts.LevelSystem
             
             AddTime(rewardTimeForGetHeight);
             
-            if (GetBestCell().y >= heightToWin)
+            if (GetBestCell().y >= scoreToWin)
             {
                 ChangeState(GameState.Win);
                 return;
@@ -485,7 +529,7 @@ namespace Game.Scripts.LevelSystem
             
             if (pawnPlayer.GetPawn().TryGetComponent(out Rigidbody2D body))
             {
-                body.AddForce(deathImpulse * Vector2.up, ForceMode2D.Impulse);
+                body.AddForce(smashedImpulse * Vector2.up, ForceMode2D.Impulse);
             }
         }
         
@@ -517,10 +561,23 @@ namespace Game.Scripts.LevelSystem
         private bool SetBestCell(Vector3Int cell)
         {
             if (cell.y <= bestCell.y) return false;
+            
+            var previousCell = bestCell;
             bestCell = cell;
+
+            OnBestCellChanged(previousCell, bestCell);
+            
             return true;
         }
-        
+
+        private void OnBestCellChanged(Vector3Int previous, Vector3Int current)
+        {
+            if (current.y > previous.y)
+            {
+                ScoreChanged?.Invoke(previous.y, current.y);
+            }
+        }
+
         private Vector3Int GetPlayerCell()
         {
             var playerWorld = pawnPlayer.GetPawn().GetWorldCenter();
@@ -579,11 +636,6 @@ namespace Game.Scripts.LevelSystem
                 Gizmos.color = Color.cyan;
                 Gizmos.DrawWireCube(Vector3.up * GetBestCell().y + Vector3.up * 0.5f, new Vector3(10, 1));
             }
-        }
-
-        private void OnGUI()
-        {
-            GUILayout.Box($"{timeLeft:F2} sec");
         }
 
         #endregion

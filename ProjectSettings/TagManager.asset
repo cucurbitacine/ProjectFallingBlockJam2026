@@ -38,6 +38,12 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 3932616511
+    locked: 0
+  - name: Hint
+    uniqueID: 3082015635
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
@@ -46,6 +52,12 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 1812384753
+    locked: 0
+  - name: Danger
+    uniqueID: 3202565307
+    locked: 0
+  - name: UI
+    uniqueID: 1574804873
     locked: 0
   m_RenderingLayers:
   - Default

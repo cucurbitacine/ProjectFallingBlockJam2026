@@ -246,6 +246,8 @@ GameObject:
   - component: {fileID: 1601983620108592844}
   - component: {fileID: 3042553924350083397}
   - component: {fileID: 4877746427020428660}
+  - component: {fileID: -123583320145250996}
+  - component: {fileID: -2003064900442519612}
   m_Layer: 0
   m_Name: Projectile_BirdPoopLauncher_Left
   m_TagString: Untagged
@@ -363,6 +365,32 @@ MonoBehaviour:
   projectilePrefab: {fileID: 100967563233730315, guid: 8cb21ad0ffd69c34d91a816e4fd0bfb8, type: 3}
   localDirection: 0
   direction: {x: 0, y: -1}
+--- !u!114 &-123583320145250996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5907762969208053470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f37bb75dfe4c45d0afe6f58407287228, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.CombatSystem.DestroyAfterTime
+  time: 10
+--- !u!210 &-2003064900442519612
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5907762969208053470}
+  m_Enabled: 1
+  m_SortingLayerID: -1092401989
+  m_SortingLayer: 3
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
 --- !u!1 &5924800506446258084
 GameObject:
   m_ObjectHideFlags: 0

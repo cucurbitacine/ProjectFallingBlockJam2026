@@ -105,6 +105,7 @@ GameObject:
   - component: {fileID: 1299618329761476188}
   - component: {fileID: 100967563233730315}
   - component: {fileID: 8965295743542402600}
+  - component: {fileID: -4677129422247203802}
   m_Layer: 0
   m_Name: Projectile_BirdPoop
   m_TagString: Untagged
@@ -219,3 +220,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.CombatSystem.DestroyInTime
   time: 10
+--- !u!210 &-4677129422247203802
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8983959178758131532}
+  m_Enabled: 1
+  m_SortingLayerID: -1092401989
+  m_SortingLayer: 3
+  m_SortingOrder: 100
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0

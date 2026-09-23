@@ -57,10 +57,12 @@ MonoBehaviour:
   bestCell: {x: 0, y: 0, z: 0}
   regularGameTick: 1
   heightToWin: 40
+  winImpulse: 3
+  winTorqueImpulse: 3
   maxSafeFallHeight: 2
   maxSafeFigureDisposition: 0.1
-  deathImpulse: 10
-  maxTimeout: 15
+  smashedImpulse: 10
+  maxTimeout: 20
   rewardTimeForGetHeight: 2
   rewardTimeForDestroyLine: 10
   updateTimeoutDuringConsequence: 0
@@ -70,13 +72,13 @@ MonoBehaviour:
   figureSpawnHeight: 10
   minFallHeightForSkip: 3
   restBetweenFigures: 2
-  eventsContainer: {fileID: 0}
+  eventsContainer: {fileID: 6967408672434105112}
   poopEventHeightStart: 10
-  poopEvent: {fileID: 0}
+  poopEvent: {fileID: 6669659990559511056}
   birdEventHeightStart: 20
-  birdEvent: {fileID: 0}
+  birdEvent: {fileID: 3225955244030876741}
   starEventHeightStart: 30
-  starEvent: {fileID: 0}
+  starEvent: {fileID: 414334803266825028}
   leftAction: {fileID: -6447267559283263229, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   rightAction: {fileID: -7413117472664654791, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   rotateAction: {fileID: -2641815146373619672, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
@@ -205,6 +207,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 166fcfbf3fdba6f4ea9f107646ac0b03, type: 3}
+--- !u!114 &414334803266825028 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 983979456143541037, guid: 166fcfbf3fdba6f4ea9f107646ac0b03, type: 3}
+  m_PrefabInstance: {fileID: 605680638673758313}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2daca667c01b466cb18ff017f67c4f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.CombatSystem.PeriodEventInvoker
 --- !u!4 &6379641602629723591 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5831815619778399662, guid: 166fcfbf3fdba6f4ea9f107646ac0b03, type: 3}
@@ -272,6 +285,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1204518240185472212, guid: 4e49b3cf433810245b80185c3bf7d4cd, type: 3}
   m_PrefabInstance: {fileID: 2041187185367617952}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6669659990559511056 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4673791394274722736, guid: 4e49b3cf433810245b80185c3bf7d4cd, type: 3}
+  m_PrefabInstance: {fileID: 2041187185367617952}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2daca667c01b466cb18ff017f67c4f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.CombatSystem.PeriodEventInvoker
 --- !u!1001 &4218883494563101260
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -334,3 +358,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3222161116931346332, guid: 28d28ce54304d874da7b36c3edd25c6f, type: 3}
   m_PrefabInstance: {fileID: 4218883494563101260}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3225955244030876741 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1605701614171448841, guid: 28d28ce54304d874da7b36c3edd25c6f, type: 3}
+  m_PrefabInstance: {fileID: 4218883494563101260}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2daca667c01b466cb18ff017f67c4f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.CombatSystem.PeriodEventInvoker
