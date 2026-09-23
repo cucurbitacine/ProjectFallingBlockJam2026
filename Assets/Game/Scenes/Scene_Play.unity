@@ -119,6 +119,44 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &253164142 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3225955244030876741, guid: f94a0a4d5b17c2f4e827cf8c412960e6, type: 3}
+  m_PrefabInstance: {fileID: 8599376673618507007}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2daca667c01b466cb18ff017f67c4f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.CombatSystem.PeriodEventInvoker
+--- !u!4 &790328959 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6967408672434105112, guid: f94a0a4d5b17c2f4e827cf8c412960e6, type: 3}
+  m_PrefabInstance: {fileID: 8599376673618507007}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &902828845 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6669659990559511056, guid: f94a0a4d5b17c2f4e827cf8c412960e6, type: 3}
+  m_PrefabInstance: {fileID: 8599376673618507007}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2daca667c01b466cb18ff017f67c4f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.CombatSystem.PeriodEventInvoker
+--- !u!114 &2098050502 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 414334803266825028, guid: f94a0a4d5b17c2f4e827cf8c412960e6, type: 3}
+  m_PrefabInstance: {fileID: 8599376673618507007}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2daca667c01b466cb18ff017f67c4f74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.CombatSystem.PeriodEventInvoker
 --- !u!1001 &1387566567778218447
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -407,8 +445,32 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1192220087580016142, guid: f94a0a4d5b17c2f4e827cf8c412960e6, type: 3}
+      propertyPath: birdEvent
+      value: 
+      objectReference: {fileID: 253164142}
+    - target: {fileID: 1192220087580016142, guid: f94a0a4d5b17c2f4e827cf8c412960e6, type: 3}
+      propertyPath: poopEvent
+      value: 
+      objectReference: {fileID: 902828845}
+    - target: {fileID: 1192220087580016142, guid: f94a0a4d5b17c2f4e827cf8c412960e6, type: 3}
+      propertyPath: starEvent
+      value: 
+      objectReference: {fileID: 2098050502}
+    - target: {fileID: 1192220087580016142, guid: f94a0a4d5b17c2f4e827cf8c412960e6, type: 3}
+      propertyPath: maxTimeout
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1192220087580016142, guid: f94a0a4d5b17c2f4e827cf8c412960e6, type: 3}
       propertyPath: fastGameTick
       value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1192220087580016142, guid: f94a0a4d5b17c2f4e827cf8c412960e6, type: 3}
+      propertyPath: eventsContainer
+      value: 
+      objectReference: {fileID: 790328959}
+    - target: {fileID: 1192220087580016142, guid: f94a0a4d5b17c2f4e827cf8c412960e6, type: 3}
+      propertyPath: rewardTimeForGetHeight
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2259841855023543915, guid: f94a0a4d5b17c2f4e827cf8c412960e6, type: 3}
       propertyPath: m_Name

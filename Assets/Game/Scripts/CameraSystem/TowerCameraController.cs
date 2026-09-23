@@ -73,7 +73,7 @@ namespace Game.Scripts.CameraSystem
             }
             else
             {
-                var y = gameLevel.GetMaxReachedHeight();
+                var y = gameLevel.GetBestCell().y;
                 followAnchor.transform.position = Vector3.up * y;
             }
         }

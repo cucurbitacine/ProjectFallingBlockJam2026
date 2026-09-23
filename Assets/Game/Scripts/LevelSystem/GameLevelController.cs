@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
+using Game.Scripts.CombatSystem;
 using Game.Scripts.Core.LevelSystem;
 using Game.Scripts.PlayerSystem;
 using Game.Scripts.WorldSystems;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Random = UnityEngine.Random;
@@ -14,22 +16,31 @@ namespace Game.Scripts.LevelSystem
         [Header("Game State")]
         [SerializeField] private GameState gameState = GameState.Unknown;
         [Min(0)]
-        [SerializeField] private int maxReachedHeight = 0;
+        [SerializeField] private Vector3Int bestCell = Vector3Int.zero;
         
         [Header("Game Settings")]
         [Min(0f)]
         [SerializeField] private float regularGameTick = 1.0f;
-        [Min(0f)]
-        [SerializeField] private float maxFallDistance = 2.5f;
+        
+        [Header("Win Settings")]
+        [Min(2)]
+        [SerializeField] private int heightToWin = 40;
+        
+        [Header("Fail Settings")]
+        [Min(0)]
+        [SerializeField] private int maxSafeFallHeight = 2;
         [Min(0f)]
         [SerializeField] private float maxSafeFigureDisposition = 0.1f;
+        [SerializeField] private float deathImpulse = 10;
+        
+        [Header("Time Settings")]
         [Min(0f)]
-        [SerializeField] private float maxTimeoutWithoutGetHeight = 15f;
+        [SerializeField] private float maxTimeout = 15f;
         [Min(0f)]
         [SerializeField] private float rewardTimeForGetHeight = 5f;
         [Min(0f)]
         [SerializeField] private float rewardTimeForDestroyLine = 10f;
-        [SerializeField] private float deathImpulse = 10;
+        [SerializeField] private bool updateTimeoutDuringConsequence;
         
         [Header("Figures Settings")]
         [Min(0f)]
@@ -38,8 +49,19 @@ namespace Game.Scripts.LevelSystem
         [SerializeField] private FigureRotation nextFigureRotation;
         [Min(0)]
         [SerializeField] private int figureSpawnHeight = 10;
+        [Min(0)]
+        [SerializeField] private int minFallHeightForSkip = 3;
         [Min(0f)]
         [SerializeField] private float restBetweenFigures = 1f;
+
+        [Header("Events Settings")]
+        [SerializeField] private Transform eventsContainer;
+        [SerializeField] private int poopEventHeightStart = 10;
+        [SerializeField] private PeriodEventInvoker poopEvent;
+        [SerializeField] private int birdEventHeightStart = 20;
+        [SerializeField] private PeriodEventInvoker birdEvent;
+        [SerializeField] private int starEventHeightStart = 30;
+        [SerializeField] private PeriodEventInvoker starEvent;
         
         [Header("Build Input")]
         [SerializeField] private InputActionReference leftAction;
@@ -54,7 +76,7 @@ namespace Game.Scripts.LevelSystem
         private bool isPlaying;
         private float tickTimeout = 0f;
         private float restTimeout = 0f;
-        private float timeoutWithoutGetHeight = 0f;
+        private float timeLeft = 0f;
         private bool isFastFalling = false;
         
         private PawnPlayerController pawnPlayer;
@@ -84,9 +106,9 @@ namespace Game.Scripts.LevelSystem
             return isFastFalling ? fallingGameTick : regularGameTick;
         }
         
-        public int GetMaxReachedHeight()
+        public Vector3Int GetBestCell()
         {
-            return maxReachedHeight;
+            return bestCell;
         }
 
         #endregion
@@ -116,7 +138,7 @@ namespace Game.Scripts.LevelSystem
             
             isPlaying = true;
             
-            ChangeState(GameState.Falling);
+            ChangeState(GameState.FigureFalling);
         }
 
         #endregion
@@ -141,9 +163,9 @@ namespace Game.Scripts.LevelSystem
             {
                 SetPawnCallbacks();
 
-                timeoutWithoutGetHeight = maxTimeoutWithoutGetHeight;
+                ResetTime();
             }
-            else if (exitState is GameState.Falling)
+            else if (exitState is GameState.FigureFalling)
             {
                 RemoveBuildCallbacks();
             }
@@ -152,7 +174,7 @@ namespace Game.Scripts.LevelSystem
             {
                 EnterInitializing();
             }
-            else if (enterState is GameState.Falling)
+            else if (enterState is GameState.FigureFalling)
             {
                 EnterFalling();
             }
@@ -160,7 +182,7 @@ namespace Game.Scripts.LevelSystem
             {
                 EnterConsequence();
             }
-            else if (enterState is GameState.Fail or GameState.Success)
+            else if (enterState is GameState.Fail or GameState.Win)
             {
                 RemovePawnCallbacks();
             }
@@ -178,7 +200,7 @@ namespace Game.Scripts.LevelSystem
             tickTimeout = 0f;
             GetNextFigure(out var figureType, out var figureState);
 
-            if (gridWorld.LaunchFigureAtHeight(figureType, figureState, GetMaxReachedHeight() + GetFigureSpawnHeight()))
+            if (gridWorld.LaunchFigureAtHeight(figureType, figureState, GetBestCell().y + GetFigureSpawnHeight()))
             {
                 SetBuildCallbacks();
             }
@@ -193,9 +215,9 @@ namespace Game.Scripts.LevelSystem
             restTimeout = 0f;
             gridWorld.MergeFigure();
 
-            for (int i = 0; i < gridWorld.DestroyFullLines(); i++)
+            for (var i = 0; i < gridWorld.DestroyFullLines(); i++)
             {
-                timeoutWithoutGetHeight += rewardTimeForDestroyLine;
+                AddTime(rewardTimeForDestroyLine);
             }
             
             RandomizeNextFigure();
@@ -203,21 +225,27 @@ namespace Game.Scripts.LevelSystem
         
         private void UpdateGame(GameState state, float deltaTime)
         {
-            if (state == GameState.Falling)
+            if (state == GameState.FigureFalling)
             {
-                UpdateFalling(deltaTime);
+                UpdateFigureFalling(deltaTime);
             }
             else if (state == GameState.Consequence)
             {
                 UpdateConsequence(deltaTime);
             }
+
+            eventsContainer.position = Vector2.up * GetBestCell().y;
         }
-                
-        private void UpdateFalling(float deltaTime)
+
+        private bool IsPlayerFallDown()
         {
-            var playerY = pawnPlayer.PlayerTransform.Get().position.y;
-            var fallDistance = GetMaxReachedHeight() - playerY;
-            if (fallDistance > maxFallDistance)
+            var fallDistance = GetBestCell().y - GetPlayerCell().y;
+            return fallDistance > maxSafeFallHeight;
+        }
+        
+        private void UpdateFigureFalling(float deltaTime)
+        {
+            if (IsPlayerFallDown())
             {
                 Fail(FailReason.FellToLow);
                 return;
@@ -231,7 +259,7 @@ namespace Game.Scripts.LevelSystem
                     gridWorld.MoveFigureY(down);
                     tickTimeout = 0f;
 
-                    if (gridWorld.IsLowerThen(GetMaxReachedHeight() - maxFallDistance))
+                    if (gridWorld.IsLowerThen(GetBestCell().y - minFallHeightForSkip))
                     {
                         gridWorld.SkipFigure();
                         ChangeState(GameState.Consequence);
@@ -249,42 +277,27 @@ namespace Game.Scripts.LevelSystem
                 tickTimeout += deltaTime;
             }
 
-            if (timeoutWithoutGetHeight <= 0f)
-            {
-                Fail(FailReason.DidntGetHigher);
-                return;
-            }
-            else
-            {
-                timeoutWithoutGetHeight -= deltaTime;
-            }
+            UpdateTimeout(deltaTime);
         }
         
         private void UpdateConsequence(float deltaTime)
         {
             if (restTimeout >= restBetweenFigures)
             {
-                ChangeState(GameState.Falling);
+                ChangeState(GameState.FigureFalling);
                 return;
             }
             else
             {
                 restTimeout += deltaTime;
             }
-            
-            /*
-            if (timeoutWithoutGetHeight <= 0f)
-            {
-                Fail(FailReason.DidntGetHigher);
-                return;
-            }
-            else
-            {
-                timeoutWithoutGetHeight -= deltaTime;
-            }
-            */
-        }
 
+            if (updateTimeoutDuringConsequence)
+            {
+                UpdateTimeout(deltaTime);   
+            }
+        }
+        
         private void Fail(FailReason reason)
         {
             Debug.LogWarning($"Fail: {reason}");
@@ -338,7 +351,7 @@ namespace Game.Scripts.LevelSystem
 
         private void OnLeft(InputAction.CallbackContext context)
         {
-            if (GetGameState() != GameState.Falling) return;
+            if (GetGameState() != GameState.FigureFalling) return;
             
             var left = -1;
             
@@ -350,7 +363,7 @@ namespace Game.Scripts.LevelSystem
 
         private void OnRight(InputAction.CallbackContext context)
         {
-            if (GetGameState() != GameState.Falling) return;
+            if (GetGameState() != GameState.FigureFalling) return;
             
             var right = 1;
             
@@ -362,7 +375,7 @@ namespace Game.Scripts.LevelSystem
 
         private void OnRotate(InputAction.CallbackContext context)
         {
-            if (GetGameState() != GameState.Falling) return;
+            if (GetGameState() != GameState.FigureFalling) return;
             
             if (gridWorld.IsPossibleRotateFigure())
             {
@@ -372,13 +385,13 @@ namespace Game.Scripts.LevelSystem
         
         private void OnDown(InputAction.CallbackContext context)
         {
-            if (GetGameState() != GameState.Falling) return;
+            if (GetGameState() != GameState.FigureFalling) return;
             
             if (context.started)
             {
                 isFastFalling = true;
                 
-                if (GetGameState() == GameState.Falling)
+                if (GetGameState() == GameState.FigureFalling)
                 {
                     var down = -1;
                     if (gridWorld.IsPossibleMoveFigureY(down))
@@ -397,13 +410,31 @@ namespace Game.Scripts.LevelSystem
         
         private void OnPlayerPawnLanded()
         {
-            var playerCenter = pawnPlayer.GetPawn().GetWorldCenter();
-            var playerCell = gridWorld.GetGrid().WorldToCell(playerCenter);
+            var playerCell = GetPlayerCell();
 
-            if (SetMaxReachedHeight(playerCell.y))
+            if (!SetBestCell(playerCell)) return;
+            
+            AddTime(rewardTimeForGetHeight);
+            
+            if (GetBestCell().y >= heightToWin)
             {
-                //timeoutWithoutGetHeight = maxTimeoutWithoutGetHeight;
-                timeoutWithoutGetHeight += rewardTimeForGetHeight;
+                ChangeState(GameState.Win);
+                return;
+            }
+
+            if (poopEvent && !poopEvent.IsPlaying() && GetBestCell().y >= poopEventHeightStart)
+            {
+                poopEvent.Play();
+            }
+            
+            if (birdEvent && !birdEvent.IsPlaying() && GetBestCell().y >= birdEventHeightStart)
+            {
+                birdEvent.Play();
+            }
+            
+            if (starEvent && !starEvent.IsPlaying() && GetBestCell().y >= starEventHeightStart)
+            {
+                starEvent.Play();
             }
         }
 
@@ -423,7 +454,7 @@ namespace Game.Scripts.LevelSystem
         private void OnPlayerCollisionEnter(Collision2D other)
         {
             // Only during Falling 
-            if (GetGameState() != GameState.Falling) return;
+            if (GetGameState() != GameState.FigureFalling) return;
             
             // Contact only with Block
             if (!other.collider.TryGetComponent(out BlockController block)) return;
@@ -462,11 +493,39 @@ namespace Game.Scripts.LevelSystem
 
         #region Private API
 
-        private bool SetMaxReachedHeight(int height)
+        private void AddTime(float time)
         {
-            if (height <= maxReachedHeight) return false;
-            maxReachedHeight = height;
+            timeLeft = Mathf.Min(timeLeft + time, maxTimeout);
+        }
+
+        private void ResetTime()
+        {
+            timeLeft = maxTimeout;
+        }
+        
+        private void UpdateTimeout(float deltaTime)
+        {
+            if (timeLeft <= 0f)
+            {
+                Fail(FailReason.DidntGetHigher);
+                return;
+            }
+            
+            timeLeft -= deltaTime;
+        }
+        
+        private bool SetBestCell(Vector3Int cell)
+        {
+            if (cell.y <= bestCell.y) return false;
+            bestCell = cell;
             return true;
+        }
+        
+        private Vector3Int GetPlayerCell()
+        {
+            var playerWorld = pawnPlayer.GetPawn().GetWorldCenter();
+            var playerCell = gridWorld.GetGrid().WorldToCell(playerWorld);
+            return playerCell;
         }
         
         private int GetFigureSpawnHeight()
@@ -518,13 +577,13 @@ namespace Game.Scripts.LevelSystem
                 Gizmos.DrawWireCube(playerBlockCenter, gridWorld.GetGrid().cellSize);
 
                 Gizmos.color = Color.cyan;
-                Gizmos.DrawWireCube(Vector3.up * GetMaxReachedHeight() + Vector3.up * 0.5f, new Vector3(10, 1));
+                Gizmos.DrawWireCube(Vector3.up * GetBestCell().y + Vector3.up * 0.5f, new Vector3(10, 1));
             }
         }
 
         private void OnGUI()
         {
-            GUILayout.Box($"{timeoutWithoutGetHeight:F2} sec");
+            GUILayout.Box($"{timeLeft:F2} sec");
         }
 
         #endregion
@@ -534,10 +593,10 @@ namespace Game.Scripts.LevelSystem
     {
         Unknown,
         Initializing,
-        Falling,
+        FigureFalling,
         Consequence,
         Fail,
-        Success,
+        Win,
     }
 
     public enum FailReason

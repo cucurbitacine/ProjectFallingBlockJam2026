@@ -33,22 +33,36 @@ namespace Game.Scripts.CombatSystem
             ValueChanged?.Invoke(prevValue, nextValue);
         }
         
-        public void Damage(int amount)
+        public int Damage(int amount)
         {
-            if (amount >= 0) return;
+            if (amount <= 0) return 0;
+
+            if (amount > GetValue())
+            {
+                amount = GetValue();
+            }
             
             SetValue(GetValue() - amount);
             
             Damaged?.Invoke(amount);
+
+            return amount;
         }
         
-        public void Heal(int amount)
+        public int Heal(int amount)
         {
-            if (amount <= 0) return;
+            if (amount <= 0) return 0;
+
+            if (GetValue() + amount > GetMaxValue())
+            {
+                amount = GetMaxValue() - GetValue();
+            }
             
             SetValue(GetValue() + amount);
             
             Healed?.Invoke(amount);
+
+            return amount;
         }
     }
 }
