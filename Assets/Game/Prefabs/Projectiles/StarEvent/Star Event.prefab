@@ -152,7 +152,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6774456558617239316}
         m_TargetAssemblyTypeName: Game.Scripts.CombatSystem.ProjectileLauncherList2D, Assembly-CSharp
-        m_MethodName: LaunchRandomProjectile
+        m_MethodName: LaunchProjectile
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

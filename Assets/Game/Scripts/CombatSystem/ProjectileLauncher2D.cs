@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Game.Scripts.CombatSystem
 {
-    public class ProjectileLauncher2D : MonoBehaviour
+    public class ProjectileLauncher2D : BaseProjectile2D
     {
         [SerializeField] private Projectile2D projectilePrefab;
 
@@ -28,16 +28,11 @@ namespace Game.Scripts.CombatSystem
 
         public Quaternion GetLaunchRotation() => Quaternion.LookRotation(Vector3.forward, GetLaunchDirection());
         
-        public Projectile2D Launch()
+        public override Projectile2D Launch()
         {
             var projectile = Instantiate(projectilePrefab, GetLaunchPosition(), GetLaunchRotation());
 
             return projectile;
-        } 
-        
-        public void LaunchProjectile()
-        {
-            Launch();
         } 
         
         private void OnValidate()
