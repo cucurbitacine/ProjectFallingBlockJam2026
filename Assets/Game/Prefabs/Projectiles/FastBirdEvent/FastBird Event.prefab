@@ -45,8 +45,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.CombatSystem.ProjectileLauncher2D
   projectilePrefab: {fileID: 3042553924350083397, guid: e65a2516ed5a780428d09092ce2fdf6a, type: 3}
-  localDirection: 0
+  offset: {x: 0, y: 0}
   direction: {x: 0, y: 1}
+  localDirection: 0
 --- !u!1 &2958843331951691491
 GameObject:
   m_ObjectHideFlags: 0
@@ -107,7 +108,7 @@ GameObject:
   - component: {fileID: 3222161116931346332}
   - component: {fileID: 1605701614171448841}
   m_Layer: 0
-  m_Name: Bird Event
+  m_Name: FastBird Event
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -145,7 +146,7 @@ MonoBehaviour:
   actualTime: 0
   actualPeriod: 0
   playOnStart: 0
-  periodMin: 6
+  periodMin: 4
   periodThreshold: 4
   periodEvent:
     m_PersistentCalls:
@@ -207,5 +208,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.CombatSystem.ProjectileLauncher2D
   projectilePrefab: {fileID: 3042553924350083397, guid: a05144a2ae21842469dd53faa7b64321, type: 3}
-  localDirection: 0
+  offset: {x: 0, y: 0}
   direction: {x: 0, y: 1}
+  localDirection: 0

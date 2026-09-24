@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using Game.Scripts.CombatSystem;
 using Game.Scripts.Core.LevelSystem;
 using Game.Scripts.PlayerSystem;
 using Game.Scripts.WorldSystems;
@@ -37,10 +36,6 @@ namespace Game.Scripts.LevelSystem
         [Header("Time Settings")]
         [Min(0f)]
         [SerializeField] private float maxTimeout = 15f;
-        [Min(0f)]
-        [SerializeField] private float rewardTimeForGetHeight = 5f;
-        [Min(0f)]
-        [SerializeField] private float rewardTimeForDestroyLine = 10f;
         [SerializeField] private bool updateTimeoutDuringConsequence;
         
         [Header("Figures Settings")]
@@ -57,12 +52,6 @@ namespace Game.Scripts.LevelSystem
 
         [Header("Events Settings")]
         [SerializeField] private Transform eventsContainer;
-        [SerializeField] private int poopEventHeightStart = 10;
-        [SerializeField] private PeriodEventInvoker poopEvent;
-        [SerializeField] private int birdEventHeightStart = 20;
-        [SerializeField] private PeriodEventInvoker birdEvent;
-        [SerializeField] private int starEventHeightStart = 30;
-        [SerializeField] private PeriodEventInvoker starEvent;
         
         [Header("Build Input")]
         [SerializeField] private InputActionReference leftAction;
@@ -126,6 +115,16 @@ namespace Game.Scripts.LevelSystem
         public int GetScore()
         {
             return GetBestCell().y;
+        }
+
+        public void HealPlayer(int amount)
+        {
+            pawnPlayer.GetHealth().Heal(amount);
+        }
+        
+        public void AddTime(float time)
+        {
+            timeLeft = Mathf.Min(timeLeft + time, maxTimeout);
         }
         
         #endregion
@@ -240,9 +239,9 @@ namespace Game.Scripts.LevelSystem
             restTimeout = 0f;
             gridWorld.MergeFigure();
 
-            for (var i = 0; i < gridWorld.DestroyFullLines(); i++)
+            if (gridWorld.DestroyFullLines() > 0)
             {
-                AddTime(rewardTimeForDestroyLine);
+                AddTime(maxTimeout);
             }
             
             RandomizeNextFigure();
@@ -286,12 +285,22 @@ namespace Game.Scripts.LevelSystem
             var fallDistance = GetBestCell().y - GetPlayerCell().y;
             return fallDistance > maxSafeFallHeight;
         }
-        
-        private void UpdateFigureFalling(float deltaTime)
+
+        private bool IsPlayerFailBecauseFell()
         {
             if (IsPlayerFallDown())
             {
                 Fail(FailReason.FellToLow);
+                return true;
+            }
+
+            return false;
+        }
+        
+        private void UpdateFigureFalling(float deltaTime)
+        {
+            if (IsPlayerFailBecauseFell())
+            {
                 return;
             }
             
@@ -326,6 +335,11 @@ namespace Game.Scripts.LevelSystem
         
         private void UpdateConsequence(float deltaTime)
         {
+            if (IsPlayerFailBecauseFell())
+            {
+                return;
+            }
+            
             if (restTimeout >= restBetweenFigures)
             {
                 ChangeState(GameState.FigureFalling);
@@ -458,27 +472,10 @@ namespace Game.Scripts.LevelSystem
 
             if (!SetBestCell(playerCell)) return;
             
-            AddTime(rewardTimeForGetHeight);
-            
             if (GetBestCell().y >= scoreToWin)
             {
                 ChangeState(GameState.Win);
                 return;
-            }
-
-            if (poopEvent && !poopEvent.IsPlaying() && GetBestCell().y >= poopEventHeightStart)
-            {
-                poopEvent.Play();
-            }
-            
-            if (birdEvent && !birdEvent.IsPlaying() && GetBestCell().y >= birdEventHeightStart)
-            {
-                birdEvent.Play();
-            }
-            
-            if (starEvent && !starEvent.IsPlaying() && GetBestCell().y >= starEventHeightStart)
-            {
-                starEvent.Play();
             }
         }
 
@@ -536,11 +533,6 @@ namespace Game.Scripts.LevelSystem
         #endregion
 
         #region Private API
-
-        private void AddTime(float time)
-        {
-            timeLeft = Mathf.Min(timeLeft + time, maxTimeout);
-        }
 
         private void ResetTime()
         {

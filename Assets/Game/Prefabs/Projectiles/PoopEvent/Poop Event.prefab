@@ -49,7 +49,7 @@ MonoBehaviour:
   actualTime: 0
   actualPeriod: 0
   playOnStart: 0
-  periodMin: 2
+  periodMin: 4
   periodThreshold: 4
   periodEvent:
     m_PersistentCalls:
@@ -111,8 +111,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.CombatSystem.ProjectileLauncher2D
   projectilePrefab: {fileID: 3042553924350083397, guid: b3783bc23bdb5a5498c72deb8c0c5d55, type: 3}
-  localDirection: 0
+  offset: {x: 0, y: 0}
   direction: {x: 1, y: 0}
+  localDirection: 0
 --- !u!1 &4143383187860589419
 GameObject:
   m_ObjectHideFlags: 0
@@ -207,5 +208,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.CombatSystem.ProjectileLauncher2D
   projectilePrefab: {fileID: 3042553924350083397, guid: 937546e5781aece4aadf57cf260084e5, type: 3}
-  localDirection: 0
+  offset: {x: 0, y: 0}
   direction: {x: -1, y: 0}
+  localDirection: 0

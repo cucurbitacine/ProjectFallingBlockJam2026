@@ -236,7 +236,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26a2d5ed4d486e44e96899913b694c5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.CombatSystem.Projectile2D
-  speedMax: 5
+  speedMax: 10
   damageAmount: 1
   destroyAfterDamage: 1
 --- !u!114 &8965295743542402600

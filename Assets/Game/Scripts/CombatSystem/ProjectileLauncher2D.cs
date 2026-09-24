@@ -6,9 +6,11 @@ namespace Game.Scripts.CombatSystem
     {
         [SerializeField] private Projectile2D projectilePrefab;
 
-        [SerializeField] private bool localDirection;
+        [Space]
+        [SerializeField] private Vector2 offset = Vector2.zero;
         [SerializeField] private Vector2 direction = Vector2.up;
-
+        [SerializeField] private bool localDirection;
+        
         public Vector2 GetLaunchDirection()
         {
             if (Mathf.Approximately(direction.sqrMagnitude, 0f))
@@ -19,7 +21,11 @@ namespace Game.Scripts.CombatSystem
             return localDirection ? transform.TransformDirection(direction) : direction;
         }
         
-        public Vector2 GetLaunchPosition() => transform.position;
+        public Vector2 GetLaunchPosition()
+        {
+            return localDirection ? transform.TransformPoint(offset) : (Vector2)transform.position + offset;
+        }
+
         public Quaternion GetLaunchRotation() => Quaternion.LookRotation(Vector3.forward, GetLaunchDirection());
         
         public Projectile2D Launch()

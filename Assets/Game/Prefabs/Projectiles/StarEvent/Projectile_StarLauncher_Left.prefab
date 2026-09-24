@@ -220,7 +220,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26a2d5ed4d486e44e96899913b694c5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.CombatSystem.Projectile2D
-  speedMax: 5
+  speedMax: 10
   damageAmount: 0
   destroyAfterDamage: 0
 --- !u!114 &4877746427020428660
@@ -236,8 +236,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.CombatSystem.ProjectileLauncher2D
   projectilePrefab: {fileID: 100967563233730315, guid: 379a028c615a47f4292a74f71ecedd82, type: 3}
-  localDirection: 0
+  offset: {x: 0.8, y: 1}
   direction: {x: 1, y: -1}
+  localDirection: 0
 --- !u!114 &-5225993317792934158
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -250,7 +251,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f37bb75dfe4c45d0afe6f58407287228, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.CombatSystem.DestroyAfterTime
-  time: 10
+  time: 20
 --- !u!210 &-1417745426564288491
 SortingGroup:
   m_ObjectHideFlags: 0

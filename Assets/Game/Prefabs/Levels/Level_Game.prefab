@@ -1,5 +1,101 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &702644598095568907
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6677231588041251833}
+  - component: {fileID: 8295862984364138553}
+  m_Layer: 0
+  m_Name: Heal Every Stage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6677231588041251833
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 702644598095568907}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7374785122672662406}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8295862984364138553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 702644598095568907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56c55f5ed138472cb3f6c08f4170d857, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.LevelSystem.GameScoreEvents
+  scoreChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  events:
+  - key: 11
+    value:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1192220087580016142}
+          m_TargetAssemblyTypeName: Game.Scripts.LevelSystem.GameLevelController, Assembly-CSharp
+          m_MethodName: HealPlayer
+          m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 1
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - key: 31
+    value:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1192220087580016142}
+          m_TargetAssemblyTypeName: Game.Scripts.LevelSystem.GameLevelController, Assembly-CSharp
+          m_MethodName: HealPlayer
+          m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 1
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - key: 51
+    value:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1192220087580016142}
+          m_TargetAssemblyTypeName: Game.Scripts.LevelSystem.GameLevelController, Assembly-CSharp
+          m_MethodName: HealPlayer
+          m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 1
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &2259841855023543915
 GameObject:
   m_ObjectHideFlags: 0
@@ -32,6 +128,8 @@ Transform:
   m_Children:
   - {fileID: 447574453183429005}
   - {fileID: 6967408672434105112}
+  - {fileID: 6677231588041251833}
+  - {fileID: 7620344949828375986}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1192220087580016142
@@ -56,15 +154,13 @@ MonoBehaviour:
   gameState: 0
   bestCell: {x: 0, y: 0, z: 0}
   regularGameTick: 1
-  heightToWin: 40
+  scoreToWin: 81
   winImpulse: 3
   winTorqueImpulse: 3
   maxSafeFallHeight: 2
   maxSafeFigureDisposition: 0.1
   smashedImpulse: 10
   maxTimeout: 20
-  rewardTimeForGetHeight: 2
-  rewardTimeForDestroyLine: 10
   updateTimeoutDuringConsequence: 0
   fallingGameTick: 0.075
   nextFigureType: 0
@@ -73,12 +169,6 @@ MonoBehaviour:
   minFallHeightForSkip: 3
   restBetweenFigures: 2
   eventsContainer: {fileID: 6967408672434105112}
-  poopEventHeightStart: 10
-  poopEvent: {fileID: 6669659990559511056}
-  birdEventHeightStart: 20
-  birdEvent: {fileID: 3225955244030876741}
-  starEventHeightStart: 30
-  starEvent: {fileID: 414334803266825028}
   leftAction: {fileID: -6447267559283263229, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   rightAction: {fileID: -7413117472664654791, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   rotateAction: {fileID: -2641815146373619672, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
@@ -94,6 +184,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6967408672434105112}
+  - component: {fileID: 4066056470526024463}
   m_Layer: 0
   m_Name: Danger Events
   m_TagString: Untagged
@@ -119,6 +210,218 @@ Transform:
   - {fileID: 6379641602629723591}
   m_Father: {fileID: 7374785122672662406}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4066056470526024463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5751418476447444222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56c55f5ed138472cb3f6c08f4170d857, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.LevelSystem.GameScoreEvents
+  scoreChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  events:
+  - key: 11
+    value:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6669659990559511056}
+          m_TargetAssemblyTypeName: Game.Scripts.CombatSystem.PeriodEventInvoker, Assembly-CSharp
+          m_MethodName: Play
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - key: 31
+    value:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3225955244030876741}
+          m_TargetAssemblyTypeName: Game.Scripts.CombatSystem.PeriodEventInvoker, Assembly-CSharp
+          m_MethodName: Play
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - key: 51
+    value:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 414334803266825028}
+          m_TargetAssemblyTypeName: Game.Scripts.CombatSystem.PeriodEventInvoker, Assembly-CSharp
+          m_MethodName: Play
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - key: 81
+    value:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6669659990559511056}
+          m_TargetAssemblyTypeName: Game.Scripts.CombatSystem.PeriodEventInvoker, Assembly-CSharp
+          m_MethodName: Stop
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 3225955244030876741}
+          m_TargetAssemblyTypeName: Game.Scripts.CombatSystem.PeriodEventInvoker, Assembly-CSharp
+          m_MethodName: Stop
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 414334803266825028}
+          m_TargetAssemblyTypeName: Game.Scripts.CombatSystem.PeriodEventInvoker, Assembly-CSharp
+          m_MethodName: Stop
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!1 &6819748056755268615
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7620344949828375986}
+  - component: {fileID: 8236328702288885195}
+  m_Layer: 0
+  m_Name: Add Time
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7620344949828375986
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6819748056755268615}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7374785122672662406}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8236328702288885195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6819748056755268615}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56c55f5ed138472cb3f6c08f4170d857, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.LevelSystem.GameScoreEvents
+  scoreChanged:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1192220087580016142}
+        m_TargetAssemblyTypeName: Game.Scripts.LevelSystem.GameLevelController, Assembly-CSharp
+        m_MethodName: AddTime
+        m_Mode: 4
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 2
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  events:
+  - key: 11
+    value:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1192220087580016142}
+          m_TargetAssemblyTypeName: Game.Scripts.LevelSystem.GameLevelController, Assembly-CSharp
+          m_MethodName: AddTime
+          m_Mode: 4
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 1
+            m_FloatArgument: 2
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - key: 21
+    value:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1192220087580016142}
+          m_TargetAssemblyTypeName: Game.Scripts.LevelSystem.GameLevelController, Assembly-CSharp
+          m_MethodName: AddTime
+          m_Mode: 4
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 1
+            m_FloatArgument: 2
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - key: 31
+    value:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1192220087580016142}
+          m_TargetAssemblyTypeName: Game.Scripts.LevelSystem.GameLevelController, Assembly-CSharp
+          m_MethodName: AddTime
+          m_Mode: 4
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 1
+            m_FloatArgument: 2
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &8083003730620944324
 GameObject:
   m_ObjectHideFlags: 0
