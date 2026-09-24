@@ -870,10 +870,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6652803891803817646}
     m_Modifications:
-    - target: {fileID: 280989992048635867, guid: 8d45b4d211455d74184b039fc2eebca4, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -35
-      objectReference: {fileID: 0}
     - target: {fileID: 4865102226909479053, guid: 8d45b4d211455d74184b039fc2eebca4, type: 3}
       propertyPath: m_Name
       value: GameScore_UI
