@@ -142,8 +142,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4287424240
+  m_fontColor: {r: 0.9411765, g: 0.9019608, b: 0.5490196, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -311,4 +311,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec6736ab6fa74d27b25971e6a7821f17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.UISystem.GameScoreUI
+  scoredPopup: {fileID: 11400000, guid: 6a629ea5e4a6ccf4c91b1c866bdc7e6e, type: 2}
   score: {fileID: 4742876283747559953}

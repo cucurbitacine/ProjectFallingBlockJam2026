@@ -62,15 +62,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c96f3fb20337429e872695d0664cf3fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.UISystem.PlayerTimeLeftUI
+  timeAddedPopup: {fileID: 11400000, guid: b81f688866c4ff2498e78c1891a7e0f1, type: 2}
   rect: {fileID: 1919693539690775453}
   slider: {fileID: 5641162666456905789}
   fill: {fileID: 4602978186120399985}
   label: {fileID: 8132890569496645732}
   colorGradient:
     serializedVersion: 2
-    key0: {r: 0.6392157, g: 0.21960786, b: 0.20784315, a: 1}
-    key1: {r: 0.9883007, g: 1, b: 0.2980392, a: 1}
-    key2: {r: 0, g: 1, b: 0.4980392, a: 0}
+    key0: {r: 0.9803922, g: 0.5019608, b: 0.4470589, a: 1}
+    key1: {r: 1, g: 0.9333334, b: 0.5490196, a: 1}
+    key2: {r: 0.5647059, g: 0.9333334, b: 0.5647059, a: 0}
     key3: {r: 0, g: 0, b: 0, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
     key5: {r: 0, g: 0, b: 0, a: 0}
@@ -676,8 +677,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4293848751
+  m_fontColor: {r: 0.6862745, g: 0.9333334, b: 0.9333334, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

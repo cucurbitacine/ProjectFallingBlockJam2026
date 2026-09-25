@@ -37,6 +37,8 @@ namespace Game.Scripts.UISystem
             mainCamera = level.GetCamera().CameraMain;
             
             playerTimeLeft.SetCanvas(canvas);
+            playerTimeLeft.SetupUI(gameLevel, mainCamera);
+            playerTimeLeft.EnableUI();
             
             playerHealth.SetCanvas(canvas);
             playerHealth.SetupUI(pawnPlayer, mainCamera);
@@ -59,9 +61,11 @@ namespace Game.Scripts.UISystem
             base.DisableUI();
             
             pawnPlayer.GetHealth().ValueChanged -= OnPlayerHealthChanged;
+            
             playerHealth.DisableUI();
             gameResult.DisableUI();
             gameScore.DisableUI();
+            playerTimeLeft.DisableUI();
             
             returnButton.onClick.RemoveListener(OnReturnButtonClick);
             

@@ -1,6 +1,7 @@
 using System.Collections;
 using Game.Scripts.Core.LevelSystem;
 using Game.Scripts.Core.PlayerSystem;
+using Game.Scripts.Figures;
 using Game.Scripts.LevelSystem;
 using Game.Scripts.WorldSystems;
 using Unity.Cinemachine;

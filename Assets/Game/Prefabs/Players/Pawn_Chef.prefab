@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 2158020892673205319}
   - component: {fileID: 611285798122841576}
   - component: {fileID: 6775513421052622933}
+  - component: {fileID: 851108645019023570}
   m_Layer: 3
   m_Name: Pawn_Chef
   m_TagString: Untagged
@@ -209,6 +210,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e00cf75c8ee447f8bcb4a4ede6ea338, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.CombatSystem.Trigger2DEvent
+--- !u!114 &851108645019023570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 692998443760713727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43b0858a793024645a5256d01e3a69c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.DamageHighlight
+  highlightDuration: 0.1
+  highlightColor: {r: 1, g: 0, b: 0, a: 1}
+  sprite: {fileID: 5717765858405778705}
 --- !u!1001 &4679702530630450275
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -266,6 +282,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 80a8495289ecabd40acecdd6a329dd80, type: 3}
+--- !u!212 &5717765858405778705 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 1128206034831898994, guid: 80a8495289ecabd40acecdd6a329dd80, type: 3}
+  m_PrefabInstance: {fileID: 4679702530630450275}
+  m_PrefabAsset: {fileID: 0}
 --- !u!95 &5750593310660898426 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 1098757971495047705, guid: 80a8495289ecabd40acecdd6a329dd80, type: 3}

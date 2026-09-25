@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game.Scripts
+namespace Game.Scripts.Figures
 {
     [CreateAssetMenu(menuName = "Create FigureAsset", fileName = "FigureAsset", order = 0)]
     public class FigureAsset : ScriptableObject

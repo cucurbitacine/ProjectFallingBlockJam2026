@@ -1,3 +1,4 @@
+using Game.Scripts.FxSystem;
 using Game.Scripts.PlayerSystem;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,6 +7,10 @@ namespace Game.Scripts.UISystem
 {
     public class PlayerHealthUI : MonoBehaviour
     {
+        [SerializeField] private TextPopupAsset damagePopup;
+        [SerializeField] private TextPopupAsset healPopup;
+        [Space]
+        [SerializeField] private RectTransform content;
         [SerializeField] private Image[] health;
         
         private PawnPlayerController _player;
@@ -32,6 +37,7 @@ namespace Game.Scripts.UISystem
         {
             _player.GetHealth().ValueChanged += OnPlayerHealthChanged;
             _player.GetHealth().Damaged += OnPlayerDamaged;
+            _player.GetHealth().Healed += OnPlayerHealed;
 
             _isPlaying = true;
         }
@@ -42,6 +48,7 @@ namespace Game.Scripts.UISystem
             
             _player.GetHealth().ValueChanged -= OnPlayerHealthChanged;
             _player.GetHealth().Damaged -= OnPlayerDamaged;
+            _player.GetHealth().Healed -= OnPlayerHealed;
         }
 
         private void UpdateUI(float deltaTime)
@@ -64,13 +71,19 @@ namespace Game.Scripts.UISystem
 
             _selfRect.anchoredPosition = localPosition;
         }
-
         
-        private void OnPlayerDamaged(int damageAmount)
+        private void OnPlayerDamaged(int amount)
         {
-            // vfx
+            var worldPosition = (Vector2) _camera.ScreenToWorldPoint(content.transform.position);
+            damagePopup.Popup($"-{amount}", worldPosition);
         }
 
+        private void OnPlayerHealed(int amount)
+        {
+            var worldPosition = (Vector2) _camera.ScreenToWorldPoint(content.transform.position);
+            healPopup.Popup($"+{amount}", worldPosition);
+        }
+        
         private void OnPlayerHealthChanged(int previous, int current)
         {
             var minCount = Mathf.Min(health.Length, current);

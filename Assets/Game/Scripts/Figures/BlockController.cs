@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game.Scripts
+namespace Game.Scripts.Figures
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Collider2D))]

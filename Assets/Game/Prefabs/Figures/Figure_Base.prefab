@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 2358164439381482866}
   - component: {fileID: 3805000354778827563}
   - component: {fileID: 6220486103423728813}
+  - component: {fileID: 4350427118164794117}
   m_Layer: 0
-  m_Name: Figure_Empty
+  m_Name: Figure_Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45,10 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 495b2c887ae84582a5434e92dc2314f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.FigureController
-  localPosition: {x: 0, y: 0}
-  figureSize: {x: 0, y: 0}
-  grid: {fileID: 6220486103423728813}
-  blocks: []
+  rotationBlock: {fileID: 0}
 --- !u!156049354 &6220486103423728813
 Grid:
   m_ObjectHideFlags: 0
@@ -61,3 +59,19 @@ Grid:
   m_CellGap: {x: 0, y: 0, z: 0}
   m_CellLayout: 0
   m_CellSwizzle: 0
+--- !u!114 &4350427118164794117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2723532464654936147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6e737aa6506d644da50928873d496fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.FxSystem.DoPunchEffect
+  effectEvent: 2
+  punchSettings: {fileID: 11400000, guid: 0a1d6d7ad43eb8942aeae904d13c0cdf, type: 2}
+  punchType: 0
+  useWorldSpace: 1

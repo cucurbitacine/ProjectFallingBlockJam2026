@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Game.Scripts.Core.WorldSystem;
+using Game.Scripts.Figures;
 using UnityEngine;
 
 namespace Game.Scripts.WorldSystems

@@ -1,3 +1,4 @@
+using Game.Scripts.FxSystem;
 using Game.Scripts.LevelSystem;
 using Game.Scripts.PlayerSystem;
 using TMPro;
@@ -7,6 +8,7 @@ namespace Game.Scripts.UISystem
 {
     public class GameScoreUI : MonoBehaviour
     {
+        [SerializeField] private TextPopupAsset scoredPopup;
         [SerializeField] private TMP_Text score;
         
         private PawnPlayerController _player;
@@ -71,6 +73,14 @@ namespace Game.Scripts.UISystem
         private void OnGameScoreChanged(int previous, int current)
         {
             score.text = $"{current}";
+
+            var delta = current - previous;
+            if (delta > 0)
+            {
+                var worldPosition = (Vector2)_camera.ScreenToWorldPoint(score.transform.position);
+                
+                scoredPopup.Popup($"+{delta}", worldPosition);
+            }
         }
         
         private void Update()

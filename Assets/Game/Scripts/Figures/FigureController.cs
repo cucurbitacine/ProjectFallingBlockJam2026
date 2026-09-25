@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game.Scripts
+namespace Game.Scripts.Figures
 {
     [DisallowMultipleComponent]
     public class FigureController : MonoBehaviour

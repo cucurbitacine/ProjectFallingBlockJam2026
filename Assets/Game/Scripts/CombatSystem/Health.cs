@@ -42,6 +42,8 @@ namespace Game.Scripts.CombatSystem
                 amount = GetValue();
             }
             
+            if (amount <= 0) return 0;
+            
             SetValue(GetValue() - amount);
             
             Damaged?.Invoke(amount);
@@ -52,11 +54,13 @@ namespace Game.Scripts.CombatSystem
         public int Heal(int amount)
         {
             if (amount <= 0) return 0;
-
+            
             if (GetValue() + amount > GetMaxValue())
             {
                 amount = GetMaxValue() - GetValue();
             }
+            
+            if (amount <= 0) return 0;
             
             SetValue(GetValue() + amount);
             

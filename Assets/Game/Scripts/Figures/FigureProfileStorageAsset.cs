@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game.Scripts
+namespace Game.Scripts.Figures
 {
     [CreateAssetMenu(menuName = "Create FigureProfileStorageAsset", fileName = "FigureProfileStorageAsset", order = 0)]
     public class FigureProfileStorageAsset : ScriptableObject

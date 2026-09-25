@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Game.Scripts.Core.LevelSystem;
+using Game.Scripts.Figures;
 using Game.Scripts.PlayerSystem;
 using Game.Scripts.WorldSystems;
 using UnityEngine;
@@ -81,6 +82,7 @@ namespace Game.Scripts.LevelSystem
         public event Action<GameState, GameState> GameStateChanged;
         public event Action<FailReason> GameFailed;
         public event Action<int, int> ScoreChanged;
+        public event Action<float> TimeAdded;
         
         [ContextMenu(nameof(ReturnMenuLevel))]
         public void ReturnMenuLevel()
@@ -125,7 +127,11 @@ namespace Game.Scripts.LevelSystem
         
         public void AddTime(float time)
         {
+            var wasTimeLeft = timeLeft;
             timeLeft = Mathf.Min(timeLeft + time, maxTimeout);
+            
+            var deltaTime = timeLeft - wasTimeLeft;
+            TimeAdded?.Invoke(deltaTime);
         }
         
         #endregion
@@ -229,7 +235,7 @@ namespace Game.Scripts.LevelSystem
             }
             else
             {
-                Fail(FailReason.ReachedTowerLimit);
+                Fail(FailReason.TowerLimit);
             }
         }
         
@@ -308,7 +314,7 @@ namespace Game.Scripts.LevelSystem
         {
             if (IsPlayerFallDown())
             {
-                Fail(FailReason.FellToLow);
+                Fail(FailReason.Fell);
                 return true;
             }
 
@@ -499,9 +505,11 @@ namespace Game.Scripts.LevelSystem
 
         private void OnPlayerHealthChanged(int prev, int curr)
         {
+            if (GetGameState() is not (GameState.FigureFalling or GameState.Consequence)) return;
+            
             if (curr < prev && curr == 0)
             {
-                Fail(FailReason.LostHealth);
+                Fail(FailReason.Died);
             }
         }
         
@@ -535,12 +543,19 @@ namespace Game.Scripts.LevelSystem
             var disposition = Vector2.Distance(shouldBeAt, actuallyAt);
             if (disposition <= maxSafeFigureDisposition) return;
             
-            Fail(FailReason.SmashedByFallingFigure);
+            Fail(FailReason.Smashed);
+
+            DamagePlayer(3);
         }
         
         #endregion
         
         #region Private API
+        
+        private void DamagePlayer(int damageAmount)
+        {
+            pawnPlayer.GetHealth().Damage(damageAmount);
+        }
         
         private void ResetTime()
         {
@@ -551,7 +566,7 @@ namespace Game.Scripts.LevelSystem
         {
             if (timeLeft <= 0f)
             {
-                Fail(FailReason.DidntGetHigher);
+                Fail(FailReason.Timeout);
                 return;
             }
             
@@ -653,10 +668,10 @@ namespace Game.Scripts.LevelSystem
 
     public enum FailReason
     {
-        SmashedByFallingFigure,
-        FellToLow,
-        ReachedTowerLimit,
-        LostHealth,
-        DidntGetHigher,
+        Smashed,
+        Fell,
+        TowerLimit,
+        Died,
+        Timeout,
     }
 }
