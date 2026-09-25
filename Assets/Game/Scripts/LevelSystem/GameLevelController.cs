@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Game.Scripts.Core.LevelSystem;
 using Game.Scripts.Figures;
+using Game.Scripts.FxSystem;
 using Game.Scripts.PlayerSystem;
 using Game.Scripts.WorldSystems;
 using UnityEngine;
@@ -20,6 +21,7 @@ namespace Game.Scripts.LevelSystem
         [Header("Game Settings")]
         [Min(0f)]
         [SerializeField] private float regularGameTick = 1.0f;
+        [SerializeField] private SpaghettiController spaghetti;
         
         [Header("Win Settings")]
         [Min(1)]
@@ -90,6 +92,11 @@ namespace Game.Scripts.LevelSystem
             LevelManager.Instance.LoadSceneAsync(menuLevelScene);
         }
 
+        public SpaghettiController GetSpaghetti()
+        {
+            return spaghetti;
+        }
+        
         public PawnPlayerController GetPawnPlayer()
         {
             return pawnPlayer;

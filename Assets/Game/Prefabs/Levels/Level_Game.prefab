@@ -155,6 +155,7 @@ MonoBehaviour:
   gameState: 0
   bestCell: {x: 0, y: 0, z: 0}
   regularGameTick: 1
+  spaghetti: {fileID: 5549602618897401285}
   scoreToWin: 81
   winImpulse: 3
   winTorqueImpulse: 3

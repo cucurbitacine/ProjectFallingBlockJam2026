@@ -10,6 +10,7 @@ namespace Game.Scripts.UISystem
     {
         [SerializeField] private TextPopupAsset scoredPopup;
         [SerializeField] private TMP_Text score;
+        [SerializeField] private TMP_Text length;
         
         private PawnPlayerController _player;
         private GameLevelController _level;
@@ -54,6 +55,9 @@ namespace Game.Scripts.UISystem
             var worldPosition = _player.GetPawn().GetWorldCenter();
 
             UpdatePosition(worldPosition, _camera);
+
+            var spaghettiLength = _level.GetSpaghetti().GetLenght();
+            length.text = $"{spaghettiLength:F1}m";
         }
         
         private void UpdatePosition(Vector3 worldPosition, Camera camera)
@@ -72,6 +76,8 @@ namespace Game.Scripts.UISystem
         
         private void OnGameScoreChanged(int previous, int current)
         {
+            if (!score.gameObject.activeInHierarchy) return;
+            
             score.text = $"{current}";
 
             var delta = current - previous;
