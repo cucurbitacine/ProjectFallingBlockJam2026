@@ -76,6 +76,9 @@ namespace Game.Scripts.PlayerSystem.PawnSystem
 
         private void OnDrawGizmosSelected()
         {
+            Gizmos.color = Color.yellowNice;
+            Gizmos.DrawWireSphere(GetWorldCenter(), 0.1f);
+            
             Gizmos.color = grounded ? Color.limeGreen : Color.softRed;
             Gizmos.DrawWireSphere(groundCheckPosition, groundCheckRadius);
         }

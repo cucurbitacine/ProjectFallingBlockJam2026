@@ -140,7 +140,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.PlayerSystem.PawnSystem.PlayerPawnController
   grounded: 0
-  worldCenter: {x: 0, y: 0.5}
+  worldCenter: {x: 0, y: 0.35}
   groundCheckRadius: 0.1
   groundCheckFilter:
     useTriggers: 0

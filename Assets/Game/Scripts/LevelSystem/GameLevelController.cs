@@ -90,6 +90,11 @@ namespace Game.Scripts.LevelSystem
             LevelManager.Instance.LoadSceneAsync(menuLevelScene);
         }
 
+        public PawnPlayerController GetPawnPlayer()
+        {
+            return pawnPlayer;
+        }
+        
         public GameState GetGameState()
         {
             return gameState;
@@ -120,6 +125,11 @@ namespace Game.Scripts.LevelSystem
             return GetBestCell().y;
         }
 
+        public GridWorldController GetGridWorld()
+        {
+            return gridWorld;
+        }
+        
         public void HealPlayer(int amount)
         {
             pawnPlayer.GetHealth().Heal(amount);
@@ -229,7 +239,7 @@ namespace Game.Scripts.LevelSystem
             tickTimeout = 0f;
             GetNextFigure(out var figureType, out var figureState);
 
-            if (gridWorld.LaunchFigureAtHeight(figureType, figureState, GetBestCell().y + GetFigureSpawnHeight()))
+            if (GetGridWorld().LaunchFigureAtHeight(figureType, figureState, GetBestCell().y + GetFigureSpawnHeight()))
             {
                 SetBuildCallbacks();
             }
@@ -242,9 +252,9 @@ namespace Game.Scripts.LevelSystem
         private void EnterConsequence()
         {
             restTimeout = 0f;
-            gridWorld.MergeFigure();
+            GetGridWorld().MergeFigure();
 
-            if (gridWorld.DestroyFullLines() > 0)
+            if (GetGridWorld().DestroyFullLines() > 0)
             {
                 AddTime(maxTimeout);
             }
@@ -327,18 +337,20 @@ namespace Game.Scripts.LevelSystem
             {
                 return;
             }
+
+            var grid = GetGridWorld();
             
             if (tickTimeout >= GetGameTick())
             {
                 var down = -1;
-                if (gridWorld.IsPossibleMoveFigureY(down))
+                if (grid.IsPossibleMoveFigureY(down))
                 {
-                    gridWorld.MoveFigureY(down);
+                    grid.MoveFigureY(down);
                     tickTimeout = 0f;
 
-                    if (gridWorld.IsLowerThen(GetBestCell().y - minFallHeightForSkip))
+                    if (grid.IsLowerThen(GetBestCell().y - minFallHeightForSkip))
                     {
-                        gridWorld.SkipFigure();
+                        grid.SkipFigure();
                         ChangeState(GameState.Consequence);
                         return;
                     }
@@ -437,9 +449,9 @@ namespace Game.Scripts.LevelSystem
             
             var left = -1;
             
-            if (gridWorld.IsPossibleMoveFigureX(left))
+            if (GetGridWorld().IsPossibleMoveFigureX(left))
             {
-                gridWorld.MoveFigureX(left);
+                GetGridWorld().MoveFigureX(left);
             }
         }
 
@@ -449,9 +461,9 @@ namespace Game.Scripts.LevelSystem
             
             var right = 1;
             
-            if (gridWorld.IsPossibleMoveFigureX(right))
+            if (GetGridWorld().IsPossibleMoveFigureX(right))
             {
-                gridWorld.MoveFigureX(right);
+                GetGridWorld().MoveFigureX(right);
             }
         }
 
@@ -459,9 +471,9 @@ namespace Game.Scripts.LevelSystem
         {
             if (GetGameState() != GameState.FigureFalling) return;
             
-            if (gridWorld.IsPossibleRotateFigure())
+            if (GetGridWorld().IsPossibleRotateFigure())
             {
-                gridWorld.RotateFigure();
+                GetGridWorld().RotateFigure();
             }
         }
         
@@ -476,9 +488,9 @@ namespace Game.Scripts.LevelSystem
                 if (GetGameState() == GameState.FigureFalling)
                 {
                     var down = -1;
-                    if (gridWorld.IsPossibleMoveFigureY(down))
+                    if (GetGridWorld().IsPossibleMoveFigureY(down))
                     {
-                        gridWorld.MoveFigureY(down);
+                        GetGridWorld().MoveFigureY(down);
                         tickTimeout = 0f;
                     }
                 }
@@ -527,7 +539,7 @@ namespace Game.Scripts.LevelSystem
             if (!other.collider.TryGetComponent(out BlockController block)) return;
 
             // Block is part of Falling figure
-            var fallingFigure = gridWorld.GetFallingFigure();
+            var fallingFigure = GetGridWorld().GetFallingFigure();
             if (fallingFigure == null) return;
             if (!fallingFigure.Contains(block)) return;
 
@@ -538,7 +550,7 @@ namespace Game.Scripts.LevelSystem
             if (!Mathf.Approximately(Vector2.Dot(firstContact.normal, Vector2.right), 0f)) return;
 
             // Block is moving
-            var shouldBeAt = gridWorld.GetGrid().GetCellCenterWorld(block.GetCell());
+            var shouldBeAt = GetGridWorld().GetGrid().GetCellCenterWorld(block.GetCell());
             var actuallyAt = block.GetWorldCenter();
             var disposition = Vector2.Distance(shouldBeAt, actuallyAt);
             if (disposition <= maxSafeFigureDisposition) return;
@@ -596,7 +608,7 @@ namespace Game.Scripts.LevelSystem
         private Vector3Int GetPlayerCell()
         {
             var playerWorld = pawnPlayer.GetPawn().GetWorldCenter();
-            var playerCell = gridWorld.GetGrid().WorldToCell(playerWorld);
+            var playerCell = GetGridWorld().GetGrid().WorldToCell(playerWorld);
             return playerCell;
         }
         
@@ -642,11 +654,11 @@ namespace Game.Scripts.LevelSystem
             if (isPlaying)
             {
                 var playerCenter = pawnPlayer.GetPawn().GetWorldCenter();
-                var playerCell = gridWorld.GetGrid().WorldToCell(playerCenter);
-                var playerBlockCenter = gridWorld.GetGrid().GetCellCenterWorld(playerCell);
+                var playerCell = GetGridWorld().GetGrid().WorldToCell(playerCenter);
+                var playerBlockCenter = GetGridWorld().GetGrid().GetCellCenterWorld(playerCell);
                 
                 Gizmos.color = Color.white;
-                Gizmos.DrawWireCube(playerBlockCenter, gridWorld.GetGrid().cellSize);
+                Gizmos.DrawWireCube(playerBlockCenter, GetGridWorld().GetGrid().cellSize);
 
                 Gizmos.color = Color.cyan;
                 Gizmos.DrawWireCube(Vector3.up * GetBestCell().y + Vector3.up * 0.5f, new Vector3(10, 1));
