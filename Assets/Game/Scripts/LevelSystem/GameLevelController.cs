@@ -49,7 +49,8 @@ namespace Game.Scripts.LevelSystem
         [SerializeField] private int minFallHeightForSkip = 3;
         [Min(0f)]
         [SerializeField] private float restBetweenFigures = 1f;
-
+        [SerializeField] private LayerMask blocksLayer;
+        
         [Header("Events Settings")]
         [SerializeField] private Transform eventsContainer;
         
@@ -202,12 +203,10 @@ namespace Game.Scripts.LevelSystem
             }
             else if (enterState is GameState.Fail)
             {
-                RemovePawnCallbacks();
+                EnterFail();
             }
             else if (enterState is GameState.Win)
             {
-                RemovePawnCallbacks();
-                
                 EnterWin();
             }
         }
@@ -247,9 +246,28 @@ namespace Game.Scripts.LevelSystem
             RandomizeNextFigure();
         }
         
+        private void EnterFail()
+        {
+            RemovePawnCallbacks();
+            
+            if (pawnPlayer.GetPawn().TryGetComponent(out Collider2D shape))
+            {
+                //shape.enabled = false;
+            }
+            
+            if (pawnPlayer.GetPawn().TryGetComponent(out Rigidbody2D body))
+            {
+                body.linearVelocity = Vector2.zero;
+                
+                body.excludeLayers = blocksLayer;
+                
+                body.AddForce(smashedImpulse * Vector2.up, ForceMode2D.Impulse);
+            }
+        }
+        
         private void EnterWin()
         {
-            //Debug.Log("EnterWin");
+            RemovePawnCallbacks();
             
             if (pawnPlayer.GetPawn().TryGetComponent(out Collider2D shape))
             {
@@ -518,22 +536,12 @@ namespace Game.Scripts.LevelSystem
             if (disposition <= maxSafeFigureDisposition) return;
             
             Fail(FailReason.SmashedByFallingFigure);
-
-            if (pawnPlayer.GetPawn().TryGetComponent(out Collider2D shape))
-            {
-                shape.enabled = false;
-            }
-            
-            if (pawnPlayer.GetPawn().TryGetComponent(out Rigidbody2D body))
-            {
-                body.AddForce(smashedImpulse * Vector2.up, ForceMode2D.Impulse);
-            }
         }
         
         #endregion
-
+        
         #region Private API
-
+        
         private void ResetTime()
         {
             timeLeft = maxTimeout;

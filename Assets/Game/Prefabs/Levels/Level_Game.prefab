@@ -168,6 +168,9 @@ MonoBehaviour:
   figureSpawnHeight: 10
   minFallHeightForSkip: 3
   restBetweenFigures: 2
+  blocksLayer:
+    serializedVersion: 2
+    m_Bits: 128
   eventsContainer: {fileID: 6967408672434105112}
   leftAction: {fileID: -6447267559283263229, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   rightAction: {fileID: -7413117472664654791, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
