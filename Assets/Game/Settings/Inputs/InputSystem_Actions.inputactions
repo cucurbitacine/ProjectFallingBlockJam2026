@@ -954,6 +954,17 @@
                 },
                 {
                     "name": "",
+                    "id": "be40deb2-215f-4bb8-ac4f-75dce9fc1462",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "3aa29a31-a162-42ab-8424-0f9159d942fe",
                     "path": "<Keyboard>/s",
                     "interactions": "",
@@ -989,6 +1000,17 @@
                     "name": "",
                     "id": "633e2f10-c598-493d-a9e8-f4d6587a45b6",
                     "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Down",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f0ddc6b7-b1bc-406b-9ea4-53c3e23ba9de",
+                    "path": "<Gamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",

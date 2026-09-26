@@ -81,8 +81,6 @@ namespace Game.Scripts.UISystem
             returnButton.onClick.RemoveListener(OnReturnButtonClick);
             restartButton.onClick.RemoveListener(OnRestartButtonClick);
 
-            blackoutImage.enabled = true;
-            
             isPlaying = false;
         }
         
