@@ -370,6 +370,8 @@ GameObject:
   - component: {fileID: 7730342598550036180}
   - component: {fileID: 8663950843307285722}
   - component: {fileID: 4096791326421631088}
+  - component: {fileID: 8811657129134703921}
+  - component: {fileID: 680963363072917408}
   m_Layer: 5
   m_Name: RestartLevel
   m_TagString: Untagged
@@ -478,6 +480,52 @@ MonoBehaviour:
   m_Interactable: 1
   m_TargetGraphic: {fileID: 8663950843307285722}
   m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &8811657129134703921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2776346957027828039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6e737aa6506d644da50928873d496fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.FxSystem.DoPunchEffect
+  effectEvent: 0
+  punchSettings: {fileID: 11400000, guid: d33ca555b7f86b145ab473f0880c215e, type: 2}
+  punchType: 2
+  useWorldSpace: 0
+--- !u!114 &680963363072917408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2776346957027828039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfd115f1817e254419ee5314e260c6f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.UISystem.HoverEvent
+  pointerEnter:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8811657129134703921}
+        m_TargetAssemblyTypeName: Game.Scripts.FxSystem.DoPunchEffect, Assembly-CSharp
+        m_MethodName: LaunchEffect
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  pointerExit:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &3888880032910267618
@@ -1227,6 +1275,8 @@ GameObject:
   - component: {fileID: 4435057575324715728}
   - component: {fileID: 3734778100568007174}
   - component: {fileID: 5907403460952503491}
+  - component: {fileID: 8224389897022213815}
+  - component: {fileID: 4978904067049188665}
   m_Layer: 5
   m_Name: ReturnMenu
   m_TagString: Untagged
@@ -1335,6 +1385,52 @@ MonoBehaviour:
   m_Interactable: 1
   m_TargetGraphic: {fileID: 3734778100568007174}
   m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &8224389897022213815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8095747678443525288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6e737aa6506d644da50928873d496fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.FxSystem.DoPunchEffect
+  effectEvent: 0
+  punchSettings: {fileID: 11400000, guid: d33ca555b7f86b145ab473f0880c215e, type: 2}
+  punchType: 2
+  useWorldSpace: 0
+--- !u!114 &4978904067049188665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8095747678443525288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfd115f1817e254419ee5314e260c6f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.UISystem.HoverEvent
+  pointerEnter:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8224389897022213815}
+        m_TargetAssemblyTypeName: Game.Scripts.FxSystem.DoPunchEffect, Assembly-CSharp
+        m_MethodName: LaunchEffect
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  pointerExit:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &8158668780545022043
