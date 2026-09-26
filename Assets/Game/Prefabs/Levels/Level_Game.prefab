@@ -637,6 +637,8 @@ MonoBehaviour:
   spriteShape: {fileID: 4696173382770465367}
   gameLevel: {fileID: 1192220087580016142}
   height: 0.8
+  beginPointOffset: {x: 0, y: 0, z: 0}
+  endPointOffset: {x: 0, y: -0.1, z: 0}
 --- !u!1 &8840965537504867483
 GameObject:
   m_ObjectHideFlags: 0

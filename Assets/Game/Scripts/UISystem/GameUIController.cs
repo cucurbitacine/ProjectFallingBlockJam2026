@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Game.Scripts.Core.LevelSystem;
 using Game.Scripts.Core.UISystem;
@@ -14,10 +15,12 @@ namespace Game.Scripts.UISystem
         [SerializeField] private PlayerTimeLeftUI playerTimeLeft;
         [SerializeField] private GameResultUI gameResult;
         [SerializeField] private GameScoreUI gameScore;
+        [SerializeField] private NextFigureUI nextFigure;
         [Space]
         [SerializeField] private Canvas canvas;
         [SerializeField] private Button returnButton;
         [SerializeField] private Button restartButton;
+        [SerializeField] private Image blackoutImage;
         
         private GameLevelController gameLevel;
         private PawnPlayerController pawnPlayer;
@@ -52,8 +55,13 @@ namespace Game.Scripts.UISystem
             gameScore.SetupUI(pawnPlayer, gameLevel, mainCamera);
             gameScore.EnableUI();
             
+            nextFigure.SetupUI(gameLevel);
+            nextFigure.EnableUI();
+            
             returnButton.onClick.AddListener(OnReturnButtonClick);
             restartButton.onClick.AddListener(OnRestartButtonClick);
+            
+            blackoutImage.enabled = false;
             
             isPlaying = true;
         }
@@ -68,9 +76,12 @@ namespace Game.Scripts.UISystem
             gameResult.DisableUI();
             gameScore.DisableUI();
             playerTimeLeft.DisableUI();
+            nextFigure.DisableUI();
             
             returnButton.onClick.RemoveListener(OnReturnButtonClick);
             restartButton.onClick.RemoveListener(OnRestartButtonClick);
+
+            blackoutImage.enabled = true;
             
             isPlaying = false;
         }
@@ -87,6 +98,11 @@ namespace Game.Scripts.UISystem
         
         private void OnPlayerHealthChanged(int prev, int curr)
         {
+        }
+
+        private void Start()
+        {
+            blackoutImage.enabled = true;
         }
 
         private void Update()

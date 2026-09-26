@@ -86,6 +86,7 @@ namespace Game.Scripts.LevelSystem
         public event Action<FailReason> GameFailed;
         public event Action<int, int> ScoreChanged;
         public event Action<float> TimeAdded;
+        public event Action<FigureType, FigureRotation> NextFigureChanged;
         
         [ContextMenu(nameof(ReturnMenuLevel))]
         public void ReturnMenuLevel()
@@ -139,6 +140,12 @@ namespace Game.Scripts.LevelSystem
             return GetBestCell().y;
         }
 
+        public void GetNextFigure(out FigureType figureType, out FigureRotation figureRotation)
+        {
+            figureType = nextFigureType;
+            figureRotation = nextFigureRotation;
+        }
+        
         public GridWorldController GetGridWorld()
         {
             return gridWorld;
@@ -633,16 +640,12 @@ namespace Game.Scripts.LevelSystem
             return figureSpawnHeight;
         }
         
-        private void GetNextFigure(out FigureType figureType, out FigureRotation figureRotation)
-        {
-            figureType = nextFigureType;
-            figureRotation = nextFigureRotation;
-        }
-        
         private void RandomizeNextFigure()
         {
             nextFigureType = figureTypes[Random.Range(0, figureTypes.Length)];
             nextFigureRotation = figureStates[Random.Range(0, figureStates.Length)];
+            
+            NextFigureChanged?.Invoke(nextFigureType, nextFigureRotation);
         }
         
         private Vector2 GetSpawnPoint()

@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc0fc9cbf2874c25bbb9c2c22366b456, type: 3}
   m_Name: Figure_J
   m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.FigureAsset
-  figureIcon: {fileID: 5343578089421171085, guid: 91a01a0c5178a3641800c86194fd5ce6, type: 3}
+  figureIcon: {fileID: 7566104297934707191, guid: f85683ad1fc56834d9bbf730d22e95c0, type: 3}
   figurePrefab: {fileID: 8576343033259392582, guid: 1903b06e173834a45941c31289a17c8b, type: 3}

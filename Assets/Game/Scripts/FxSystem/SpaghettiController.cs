@@ -9,6 +9,8 @@ namespace Game.Scripts.FxSystem
         [SerializeField] private SpriteShapeController spriteShape;
         [SerializeField] private GameLevelController gameLevel;
         [SerializeField] private float height  = 0.2f;
+        [SerializeField] private Vector3 beginPointOffset  = Vector3.zero;
+        [SerializeField] private Vector3 endPointOffset  = Vector3.zero;
 
         private bool isLengthSaved;
         private float savedLength;
@@ -33,7 +35,7 @@ namespace Game.Scripts.FxSystem
         
         private void SetupBeginPoint(Vector3 beginPoint)
         {
-            var localPoint = transform.InverseTransformPoint(beginPoint);
+            var localPoint = transform.InverseTransformPoint(beginPoint + beginPointOffset);
             var count = spriteShape.spline.GetPointCount();
             var beginIndex = 0;
             if (count != 0)
@@ -52,7 +54,7 @@ namespace Game.Scripts.FxSystem
 
         private void SetupEndPoint(Vector3 endPoint)
         {
-            var localPoint = transform.InverseTransformPoint(endPoint);
+            var localPoint = transform.InverseTransformPoint(endPoint + endPointOffset);
             var count = spriteShape.spline.GetPointCount();
             var endIndex = count;
             if (count == 1)
@@ -101,7 +103,7 @@ namespace Game.Scripts.FxSystem
         
         private void UpdateEndPoint(Vector3 endPoint)
         {
-            var localPoint = transform.InverseTransformPoint(endPoint);
+            var localPoint = transform.InverseTransformPoint(endPoint + endPointOffset);
             var endIndex = spriteShape.spline.GetPointCount() - 1;
             
             spriteShape.spline.SetPosition(endIndex, localPoint);

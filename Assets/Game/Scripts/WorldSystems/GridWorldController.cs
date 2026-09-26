@@ -47,6 +47,11 @@ namespace Game.Scripts.WorldSystems
             return fallingFigure;
         }
         
+        public FigureProfileStorageAsset GetFigureStorage()
+        {
+            return figureStorage;
+        }
+        
         public bool LaunchFigureAtHeight(FigureType figureType, FigureRotation figureRotation, int height)
         {
             var grid = GetGrid();
@@ -295,9 +300,9 @@ namespace Game.Scripts.WorldSystems
 
         private FigureController InstantiateFigure(FigureType figureType, Vector2 spawnPosition)
         {
-            var figureProfile = figureStorage.GetFigureProfile(figureType);
-            //var figureAsset = figureProfile.GetFigure(figureState);
-            var figureAsset = figureProfile.GetFigureDefault();
+            var figureProfile = GetFigureStorage().GetFigureProfile(figureType);
+            //var figureAsset = GetFigureStorage().GetFigure(figureState);
+            var figureAsset = figureProfile.GetFigureAsset();
 
             var figurePrefab = figureAsset.GetPrefab();
 

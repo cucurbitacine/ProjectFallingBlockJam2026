@@ -7,7 +7,7 @@ namespace Game.Scripts.Figures
     {
         [SerializeField] private FigureAsset figureDefault;
 
-        public FigureAsset GetFigureDefault()
+        public FigureAsset GetFigureAsset()
         {
             return figureDefault;
         }
