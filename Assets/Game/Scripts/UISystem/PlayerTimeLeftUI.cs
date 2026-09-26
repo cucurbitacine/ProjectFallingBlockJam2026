@@ -9,6 +9,7 @@ namespace Game.Scripts.UISystem
     public class PlayerTimeLeftUI : MonoBehaviour
     {
         [SerializeField] private TextPopupAsset timeAddedPopup;
+        [SerializeField] private RectTransform popupAnchor;
         [Space]
         [SerializeField] private RectTransform rect;
         [SerializeField] private Slider slider;
@@ -35,7 +36,7 @@ namespace Game.Scripts.UISystem
         
         public void UpdateUI(Vector3 worldPositon, Camera camera, float timeLeft, float timeTotal)
         {
-            UpdatePosition(worldPositon, camera);
+            //UpdatePosition(worldPositon, camera);
             UpdateTime(timeLeft, timeTotal);
         }
 
@@ -51,7 +52,8 @@ namespace Game.Scripts.UISystem
         
         private void OnTimeAdded(float deltaTime)
         {
-            var worldPosition = (Vector2) _camera.ScreenToWorldPoint(label.transform.position);
+            if (Mathf.Approximately(deltaTime, 0f)) return;
+            var worldPosition = (Vector2) _camera.ScreenToWorldPoint(popupAnchor.transform.position);
             timeAddedPopup.Popup($"+{deltaTime:F1}s", worldPosition);
         }
         

@@ -9,6 +9,8 @@ namespace Game.Scripts.UISystem
     public class GameScoreUI : MonoBehaviour
     {
         [SerializeField] private TextPopupAsset scoredPopup;
+        [SerializeField] private RectTransform popupAnchor;
+        [Space]
         [SerializeField] private TMP_Text score;
         [SerializeField] private TMP_Text length;
         
@@ -52,10 +54,9 @@ namespace Game.Scripts.UISystem
 
         private void UpdateUI(float deltaTime)
         {
-            var worldPosition = _player.GetPawn().GetWorldCenter();
-
-            UpdatePosition(worldPosition, _camera);
-
+            //var worldPosition = _player.GetPawn().GetWorldCenter();
+            //UpdatePosition(worldPosition, _camera);
+            
             var spaghettiLength = _level.GetSpaghetti().GetLenght();
             length.text = $"{spaghettiLength:F1}m";
         }
@@ -83,8 +84,7 @@ namespace Game.Scripts.UISystem
             var delta = current - previous;
             if (delta > 0)
             {
-                var worldPosition = (Vector2)_camera.ScreenToWorldPoint(score.transform.position);
-                
+                var worldPosition = (Vector2)_camera.ScreenToWorldPoint(popupAnchor.transform.position);
                 scoredPopup.Popup($"+{delta}", worldPosition);
             }
         }

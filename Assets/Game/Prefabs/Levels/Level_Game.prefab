@@ -180,6 +180,7 @@ MonoBehaviour:
   downAction: {fileID: -1235450418161514135, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   spawnPoint: {fileID: 447574453183429005}
   menuLevelScene: {fileID: 11400000, guid: 8988f1d04fa628f41b3a2446c212d9dd, type: 2}
+  gameLevelScene: {fileID: 11400000, guid: b6a0fe2ad36f1a44eb63b7fa4dfc7eb6, type: 2}
 --- !u!1 &5751418476447444222
 GameObject:
   m_ObjectHideFlags: 0

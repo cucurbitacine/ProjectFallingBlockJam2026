@@ -10,14 +10,25 @@ namespace Game.Scripts.FxSystem
         [SerializeField] private GameLevelController gameLevel;
         [SerializeField] private float height  = 0.2f;
 
+        private bool isLengthSaved;
+        private float savedLength;
+        
         public float GetLenght()
         {
+            if (isLengthSaved) return savedLength;
+            
             var length = 0f;
             for (var i = 1; i < spriteShape.spline.GetPointCount(); i++)
             {
                 length += Vector3.Distance(spriteShape.spline.GetPosition(i), spriteShape.spline.GetPosition(i - 1));
             }
             return length;
+        }
+        
+        public void SaveLength()
+        {
+            savedLength = GetLenght();
+            isLengthSaved = true;
         }
         
         private void SetupBeginPoint(Vector3 beginPoint)

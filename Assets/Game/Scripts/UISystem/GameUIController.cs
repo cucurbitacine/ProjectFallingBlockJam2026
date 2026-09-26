@@ -17,6 +17,7 @@ namespace Game.Scripts.UISystem
         [Space]
         [SerializeField] private Canvas canvas;
         [SerializeField] private Button returnButton;
+        [SerializeField] private Button restartButton;
         
         private GameLevelController gameLevel;
         private PawnPlayerController pawnPlayer;
@@ -52,10 +53,11 @@ namespace Game.Scripts.UISystem
             gameScore.EnableUI();
             
             returnButton.onClick.AddListener(OnReturnButtonClick);
+            restartButton.onClick.AddListener(OnRestartButtonClick);
             
             isPlaying = true;
         }
-
+        
         public override void DisableUI()
         {
             base.DisableUI();
@@ -68,6 +70,7 @@ namespace Game.Scripts.UISystem
             playerTimeLeft.DisableUI();
             
             returnButton.onClick.RemoveListener(OnReturnButtonClick);
+            restartButton.onClick.RemoveListener(OnRestartButtonClick);
             
             isPlaying = false;
         }
@@ -75,6 +78,11 @@ namespace Game.Scripts.UISystem
         private void OnReturnButtonClick()
         {
             gameLevel.ReturnMenuLevel();
+        }
+        
+        private void OnRestartButtonClick()
+        {
+            gameLevel.RestartLevel();
         }
         
         private void OnPlayerHealthChanged(int prev, int curr)

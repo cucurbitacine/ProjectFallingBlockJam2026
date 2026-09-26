@@ -9,8 +9,9 @@ namespace Game.Scripts.UISystem
     {
         [SerializeField] private TextPopupAsset damagePopup;
         [SerializeField] private TextPopupAsset healPopup;
+        [SerializeField] private RectTransform popupAnchor;
+        
         [Space]
-        [SerializeField] private RectTransform content;
         [SerializeField] private Image[] health;
         
         private PawnPlayerController _player;
@@ -53,9 +54,8 @@ namespace Game.Scripts.UISystem
 
         private void UpdateUI(float deltaTime)
         {
-            var worldPosition = _player.GetPawn().GetWorldCenter();
-
-            UpdatePosition(worldPosition, _camera);
+            //var worldPosition = _player.GetPawn().GetWorldCenter();
+            //UpdatePosition(worldPosition, _camera);
         }
         
         private void UpdatePosition(Vector3 worldPosition, Camera camera)
@@ -74,13 +74,13 @@ namespace Game.Scripts.UISystem
         
         private void OnPlayerDamaged(int amount)
         {
-            var worldPosition = (Vector2) _camera.ScreenToWorldPoint(content.transform.position);
+            var worldPosition = (Vector2) _camera.ScreenToWorldPoint(popupAnchor.transform.position);
             damagePopup.Popup($"-{amount}", worldPosition);
         }
 
         private void OnPlayerHealed(int amount)
         {
-            var worldPosition = (Vector2) _camera.ScreenToWorldPoint(content.transform.position);
+            var worldPosition = (Vector2) _camera.ScreenToWorldPoint(popupAnchor.transform.position);
             healPopup.Popup($"+{amount}", worldPosition);
         }
         
@@ -89,7 +89,8 @@ namespace Game.Scripts.UISystem
             var minCount = Mathf.Min(health.Length, current);
             for (var i = 0; i < health.Length; i++)
             {
-                health[i].enabled = i < minCount;
+                //health[i].enabled = i < minCount;
+                health[i].gameObject.SetActive(i < minCount);
             }
         }
         

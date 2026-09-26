@@ -66,6 +66,7 @@ namespace Game.Scripts.LevelSystem
         [Header("Required")]
         [SerializeField] private Transform spawnPoint;
         [SerializeField] private LevelSceneAsset menuLevelScene;
+        [SerializeField] private LevelSceneAsset gameLevelScene;
         
         private bool isPlaying;
         private float tickTimeout = 0f;
@@ -92,6 +93,12 @@ namespace Game.Scripts.LevelSystem
             LevelManager.Instance.LoadSceneAsync(menuLevelScene);
         }
 
+        [ContextMenu(nameof(RestartLevel))]
+        public void RestartLevel()
+        {
+            LevelManager.Instance.LoadSceneAsync(gameLevelScene);
+        }
+        
         public SpaghettiController GetSpaghetti()
         {
             return spaghetti;
@@ -271,6 +278,7 @@ namespace Game.Scripts.LevelSystem
         
         private void EnterFail()
         {
+            GetSpaghetti().SaveLength();
             RemovePawnCallbacks();
             
             if (pawnPlayer.GetPawn().TryGetComponent(out Collider2D shape))
@@ -290,6 +298,7 @@ namespace Game.Scripts.LevelSystem
         
         private void EnterWin()
         {
+            GetSpaghetti().SaveLength();
             RemovePawnCallbacks();
             
             if (pawnPlayer.GetPawn().TryGetComponent(out Collider2D shape))
