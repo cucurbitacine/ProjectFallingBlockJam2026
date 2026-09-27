@@ -8,6 +8,9 @@ namespace Game.Scripts.UISystem
     {
         [SerializeField] private UnityEvent pointerEnter = new UnityEvent();
         [SerializeField] private UnityEvent pointerExit = new UnityEvent();
+
+        public UnityEvent onEnter => pointerEnter;
+        public UnityEvent onExit => pointerExit;
         
         public void OnPointerEnter(PointerEventData eventData)
         {

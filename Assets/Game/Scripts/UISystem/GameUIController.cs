@@ -1,9 +1,12 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Game.Scripts.Core.LevelSystem;
 using Game.Scripts.Core.UISystem;
 using Game.Scripts.LevelSystem;
 using Game.Scripts.PlayerSystem;
+using Game.Scripts.SoundSystem;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,10 +25,18 @@ namespace Game.Scripts.UISystem
         [SerializeField] private Button restartButton;
         [SerializeField] private Image blackoutImage;
         
+        [Space]
+        [SerializeField] private SoundSource soundSource;
+        [SerializeField] private SoundFxPreset buttonHoverSfx;
+        [SerializeField] private SoundFxPreset buttonClickSfx;
+        
         private GameLevelController gameLevel;
         private PawnPlayerController pawnPlayer;
         private Camera mainCamera;
 
+        private readonly List<Button> buttons = new List<Button>();
+        private readonly List<HoverEvent> hovers = new List<HoverEvent>();
+        
         private bool isPlaying;
         
         public override IEnumerator EnableUI(LevelController level)
@@ -63,6 +74,19 @@ namespace Game.Scripts.UISystem
             
             blackoutImage.enabled = false;
             
+            GetComponentsInChildren<Button>(true, buttons);
+            hovers.AddRange(buttons.Select(b => b.GetComponent<HoverEvent>()).Where(h => h != null));
+
+            foreach (var button in buttons)
+            {
+                button.onClick.AddListener(OnButtonClick);
+            }
+            
+            foreach (var hover in hovers)
+            {
+                hover.onEnter.AddListener(OnButtonHover);
+            }
+            
             isPlaying = true;
         }
         
@@ -81,6 +105,16 @@ namespace Game.Scripts.UISystem
             returnButton.onClick.RemoveListener(OnReturnButtonClick);
             restartButton.onClick.RemoveListener(OnRestartButtonClick);
 
+            foreach (var button in buttons)
+            {
+                button.onClick.RemoveListener(OnButtonClick);
+            }
+            
+            foreach (var hover in hovers)
+            {
+                hover.onEnter.RemoveListener(OnButtonHover);
+            }
+            
             isPlaying = false;
         }
         
@@ -98,6 +132,16 @@ namespace Game.Scripts.UISystem
         {
         }
 
+        private void OnButtonClick()
+        {
+            soundSource.Play(buttonClickSfx);
+        }
+        
+        private void OnButtonHover()
+        {
+            soundSource.Play(buttonHoverSfx);
+        }
+        
         private void Start()
         {
             blackoutImage.enabled = true;
