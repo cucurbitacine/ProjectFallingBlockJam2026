@@ -263,6 +263,8 @@ namespace Game.Scripts.LevelSystem
             if (GetGridWorld().LaunchFigureAtHeight(figureType, figureState, GetBestCell().y + GetFigureSpawnHeight()))
             {
                 SetBuildCallbacks();
+                
+                RandomizeNextFigure();
             }
             else
             {
@@ -279,8 +281,6 @@ namespace Game.Scripts.LevelSystem
             {
                 AddTime(maxTimeout);
             }
-            
-            RandomizeNextFigure();
         }
         
         private void EnterFail()

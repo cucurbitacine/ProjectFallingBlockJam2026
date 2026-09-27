@@ -177,3 +177,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.BlockEntity
   localCell: {x: 0, y: 0, z: 0}
   sprite: {fileID: 7536622135098691204}
+  destroyFxPrefab: {fileID: 5526643243693314232, guid: 706aff2bdeff6fd44b759fdb55cd5d5f, type: 3}

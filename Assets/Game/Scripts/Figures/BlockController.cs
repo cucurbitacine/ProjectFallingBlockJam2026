@@ -8,6 +8,7 @@ namespace Game.Scripts.Figures
     {
         [SerializeField] private Vector3Int localCell;
         [SerializeField] private SpriteRenderer sprite;
+        [SerializeField] private GameObject destroyFxPrefab;
         
         private Collider2D _collider;
 
@@ -47,6 +48,13 @@ namespace Game.Scripts.Figures
         public Vector3 GetWorldCenter()
         {
             return transform.position;
+        }
+
+        public void DestroyBlock()
+        {
+            gameObject.SetActive(false);
+            Instantiate(destroyFxPrefab, GetWorldCenter(), Quaternion.identity);
+            Destroy(gameObject);
         }
     }
 }

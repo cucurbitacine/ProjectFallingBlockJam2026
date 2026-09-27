@@ -403,7 +403,7 @@ namespace Game.Scripts.WorldSystems
             {
                 foreach (var block in blocks)
                 {
-                    Destroy(block.gameObject);
+                    block.DestroyBlock();
                 }
                 blocks.Clear();
             }
