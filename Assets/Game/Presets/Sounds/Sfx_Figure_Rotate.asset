@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17dead9b06c246b982b12256aca84801, type: 3}
+  m_Name: Sfx_Figure_Rotate
+  m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.SoundSystem.SoundFxPreset
+  <AudioMixerGroup>k__BackingField: {fileID: -4224525103340222117, guid: d48e5bca4749e04469d01a04defd2022, type: 2}
+  <Volume>k__BackingField: 1
+  <PlayOneShot>k__BackingField: 1
+  <PlayOnEnable>k__BackingField: 0
+  <Looped>k__BackingField: 0
+  <SpatialBlend>k__BackingField: 0
+  <MinDistance>k__BackingField: 1
+  <MaxDistance>k__BackingField: 10
+  clips:
+  - {fileID: 8300000, guid: b6e22c8ae45e6b34d889fb452fdf78b7, type: 3}

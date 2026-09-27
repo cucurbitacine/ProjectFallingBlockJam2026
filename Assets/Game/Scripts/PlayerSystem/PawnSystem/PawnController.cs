@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Game.Scripts.PlayerSystem.PawnSystem
 {
@@ -8,6 +9,7 @@ namespace Game.Scripts.PlayerSystem.PawnSystem
     {
         [SerializeField] private bool grounded;
         [SerializeField] private Vector2 worldCenter = Vector2.up * 0.5f;
+        [SerializeField] private float speedLimit = 10f;
 
         [Header("Ground")]
         [Min(0f)]
@@ -18,6 +20,9 @@ namespace Game.Scripts.PlayerSystem.PawnSystem
         [Min(0f)]
         [SerializeField] private float moveSpeed = 5f;
         [SerializeField] private float jumpHeight = 1.2f;
+
+        [Header("Events")]
+        [SerializeField] private UnityEvent onJump = new UnityEvent();
         
         private Vector2 moveInput;
         private Rigidbody2D body;
@@ -47,6 +52,8 @@ namespace Game.Scripts.PlayerSystem.PawnSystem
             var jumpVelocity = Mathf.Sqrt(-2f * gravity.y * jumpHeight);
             
             body.linearVelocityY = jumpVelocity;
+            
+            onJump.Invoke();
         }
         
         private void GroundCheck()
@@ -72,6 +79,8 @@ namespace Game.Scripts.PlayerSystem.PawnSystem
             GroundCheck();
             
             body.linearVelocityX = Mathf.Clamp(moveInput.x, -1f, 1f) * moveSpeed;
+
+            body.linearVelocity = Vector2.ClampMagnitude(body.linearVelocity, speedLimit);
         }
 
         private void OnDrawGizmosSelected()

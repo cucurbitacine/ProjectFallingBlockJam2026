@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Game.Scripts.CombatSystem
 {
@@ -10,6 +11,9 @@ namespace Game.Scripts.CombatSystem
         [Min(1)]
         [SerializeField] private int maxValue = 1;
 
+        [Space]
+        [SerializeField] private UnityEvent onDamage = new UnityEvent();
+        
         public event Action<int, int> ValueChanged; 
         public event Action<int> Damaged; 
         public event Action<int> Healed;
@@ -48,6 +52,8 @@ namespace Game.Scripts.CombatSystem
             
             Damaged?.Invoke(amount);
 
+            onDamage.Invoke();
+            
             return amount;
         }
         

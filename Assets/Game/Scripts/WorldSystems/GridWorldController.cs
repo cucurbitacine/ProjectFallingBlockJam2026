@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Game.Scripts.Core.WorldSystem;
 using Game.Scripts.Figures;
+using Game.Scripts.SoundSystem;
 using UnityEngine;
 
 namespace Game.Scripts.WorldSystems
@@ -21,6 +22,13 @@ namespace Game.Scripts.WorldSystems
         [SerializeField] private float figureFallingSpeed = 10f;
         [SerializeField] private Vector2Int gridBoundX = new Vector2Int(-5, 4);
         [SerializeField] private Vector2Int gridBoundY = new Vector2Int(0, 1000);
+
+        [Header("Sound")]
+        [SerializeField] private SoundSource soundSource;
+        [SerializeField] private SoundFxPreset figureSpawnSfx;
+        [SerializeField] private SoundFxPreset figureMoveSfx;
+        [SerializeField] private SoundFxPreset figureRotateSfx;
+        [SerializeField] private SoundFxPreset figureMergedSfx;
         
         [Header("Required")]
         [SerializeField] private Transform figureContainer;
@@ -90,6 +98,8 @@ namespace Game.Scripts.WorldSystems
                 return false;
             }
             
+            soundSource.Play(figureSpawnSfx);
+            
             // Move all blocks
             UpdateBlocksPosition(fallingFigure, 0f);
             return true;
@@ -141,6 +151,8 @@ namespace Game.Scripts.WorldSystems
                 var blockCell = block.GetCell() + Vector3Int.up * offset;
                 block.SetCell(blockCell);
             }
+            
+            soundSource.Play(figureMoveSfx);
         }
         
         public bool IsPossibleMoveFigureX(int offset, out int maxOffset)
@@ -189,6 +201,8 @@ namespace Game.Scripts.WorldSystems
                 var blockCell = block.GetCell() + Vector3Int.right * offset;
                 block.SetCell(blockCell);
             }
+            
+            soundSource.Play(figureMoveSfx);
         }
         
         public bool IsPossibleRotateFigure()
@@ -240,6 +254,8 @@ namespace Game.Scripts.WorldSystems
                 block.SetCell(blockCellRotated);
                 UpdateBlockPosition(block, 0f);
             }
+            
+            soundSource.Play(figureRotateSfx);
         }
         
         public void MergeFigure()
@@ -249,6 +265,8 @@ namespace Game.Scripts.WorldSystems
                 MergeFigure(fallingFigure);
 
                 fallingFigure = null;
+                
+                soundSource.Play(figureMergedSfx);
             }
         }
         

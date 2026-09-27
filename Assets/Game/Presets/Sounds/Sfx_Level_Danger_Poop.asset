@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 17dead9b06c246b982b12256aca84801, type: 3}
-  m_Name: Sfx_UI_Hover
+  m_Name: Sfx_Level_Danger_Poop
   m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.SoundSystem.SoundFxPreset
-  <AudioMixerGroup>k__BackingField: {fileID: 288574096293483099, guid: d48e5bca4749e04469d01a04defd2022, type: 2}
-  <Volume>k__BackingField: 0.5
+  <AudioMixerGroup>k__BackingField: {fileID: 8959107139744616901, guid: d48e5bca4749e04469d01a04defd2022, type: 2}
+  <Volume>k__BackingField: 1
   <PlayOneShot>k__BackingField: 1
-  <PlayOnEnable>k__BackingField: 0
+  <PlayOnEnable>k__BackingField: 1
   <Looped>k__BackingField: 0
   <SpatialBlend>k__BackingField: 0
   <MinDistance>k__BackingField: 1
   <MaxDistance>k__BackingField: 10
   clips:
-  - {fileID: 8300000, guid: 76c4d4781b4f5814abe987f468cfc1e0, type: 3}
+  - {fileID: 8300000, guid: b3a1260b59f63bf4898ac8f5c1b93a48, type: 3}
