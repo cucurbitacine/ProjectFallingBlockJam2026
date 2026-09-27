@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Music_Game
   m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.SoundSystem.SoundFxPreset
   <AudioMixerGroup>k__BackingField: {fileID: 7986088354425030933, guid: d48e5bca4749e04469d01a04defd2022, type: 2}
-  <Volume>k__BackingField: 1
+  <Volume>k__BackingField: 0.5
   <PlayOneShot>k__BackingField: 0
   <PlayOnEnable>k__BackingField: 1
   <Looped>k__BackingField: 1

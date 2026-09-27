@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Sfx_Level_Danger_Poop
   m_EditorClassIdentifier: Assembly-CSharp::Game.Scripts.SoundSystem.SoundFxPreset
   <AudioMixerGroup>k__BackingField: {fileID: 8959107139744616901, guid: d48e5bca4749e04469d01a04defd2022, type: 2}
-  <Volume>k__BackingField: 1
+  <Volume>k__BackingField: 0.5
   <PlayOneShot>k__BackingField: 1
   <PlayOnEnable>k__BackingField: 1
   <Looped>k__BackingField: 0
