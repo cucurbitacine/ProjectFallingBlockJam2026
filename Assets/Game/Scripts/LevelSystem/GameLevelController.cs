@@ -387,6 +387,20 @@ namespace Game.Scripts.LevelSystem
                     {
                         grid.MoveFigureY(-maxOffset);
                         fastFallingDuration = 0f;
+
+                        var playerCell = GetPlayerCell();
+                        var fallingFigure = grid.GetFallingFigure();
+                        for (int i = 0; i < fallingFigure.BlocksCount; i++)
+                        {
+                            var fallingBlock = fallingFigure.GetBlock(i);
+                            if (playerCell == fallingBlock.GetCell())
+                            {
+                                Fail(FailReason.Smashed);
+                                
+                                DamagePlayer(3);
+                                return;
+                            } 
+                        }
                     }
                 }
                 
