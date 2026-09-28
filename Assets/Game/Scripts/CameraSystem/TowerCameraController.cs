@@ -71,6 +71,12 @@ namespace Game.Scripts.CameraSystem
             {
                 followAnchor.transform.position = gameLevel.GetPlayer().PlayerTransform.Get().position;
             }
+            else if (gameLevel.GetGameState() is GameState.Win)
+            {
+                var current = followAnchor.transform.position;
+                var target = Vector3.zero;
+                followAnchor.transform.position = Vector3.MoveTowards(current, target, 2f * Time.deltaTime);
+            }
             else
             {
                 var y = gameLevel.GetBestCell().y;
@@ -80,6 +86,7 @@ namespace Game.Scripts.CameraSystem
         
         private void OnGameStateChanged(GameState exit, GameState enter)
         {
+            
         }
         
         private void OnFigureMerged(FigureController figure, GridWorldController world)

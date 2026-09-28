@@ -44,6 +44,8 @@ namespace Game.Scripts.LevelSystem
         [Header("Figures Settings")]
         [Min(0f)]
         [SerializeField] private float fallingGameTick = 0.1f;
+        [Min(0f)]
+        [SerializeField] private float fastFallingMaxDuration = 0.4f;
         [SerializeField] private FigureType nextFigureType;
         [SerializeField] private FigureRotation nextFigureRotation;
         [Min(0)]
@@ -73,7 +75,8 @@ namespace Game.Scripts.LevelSystem
         private float restTimeout = 0f;
         private float timeLeft = 0f;
         private bool isFastFalling = false;
-        
+        private float fastFallingDuration = 0.0f;
+
         private PawnPlayerController pawnPlayer;
         private GridWorldController gridWorld;
         
@@ -163,6 +166,11 @@ namespace Game.Scripts.LevelSystem
             
             var deltaTime = timeLeft - wasTimeLeft;
             TimeAdded?.Invoke(deltaTime);
+        }
+        
+        public void AddTime(AddTimeAsset addTime)
+        {
+            AddTime(addTime.GetTime(this));
         }
         
         #endregion
@@ -255,8 +263,15 @@ namespace Game.Scripts.LevelSystem
             RandomizeNextFigure();
         }
 
+        [ContextMenu(nameof(DebugWin))]
+        private void DebugWin()
+        {
+            ChangeState(GameState.Win);
+        }
+        
         private void EnterFalling()
         {
+            fastFallingDuration = 0f;
             tickTimeout = 0f;
             GetNextFigure(out var figureType, out var figureState);
 
@@ -362,6 +377,25 @@ namespace Game.Scripts.LevelSystem
             }
 
             var grid = GetGridWorld();
+            
+            if (isFastFalling)
+            {
+                if (fastFallingDuration >= fastFallingMaxDuration)
+                {
+                    grid.IsPossibleMoveFigureY(-1000, out var maxOffset);
+                    if (maxOffset > 0)
+                    {
+                        grid.MoveFigureY(-maxOffset);
+                        fastFallingDuration = 0f;
+                    }
+                }
+                
+                fastFallingDuration += deltaTime;
+            }
+            else
+            {
+                fastFallingDuration = 0f;
+            }
             
             if (tickTimeout >= GetGameTick())
             {
