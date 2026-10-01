@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.cucugamestudio.cucutools": {
+      "version": "https://github.com/cucurbitacine/CucuTools.git?path=/Assets/CucuTools#version/3.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "dde88ae0c7d1bdec101f6697e36f00aa7dcee370"
+    },
     "com.unity.2d.animation": {
       "version": "16.0.0",
       "depth": 0,

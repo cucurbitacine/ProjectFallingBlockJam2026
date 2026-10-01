@@ -1,15 +1,15 @@
 using System.Collections;
-using Game.Scripts.Core.LevelSystem;
-using Game.Scripts.Core.PlayerSystem;
+using CucuTools.LevelSystem;
 using Game.Scripts.Figures;
 using Game.Scripts.LevelSystem;
+using Game.Scripts.PlayerSystem;
 using Game.Scripts.WorldSystems;
 using Unity.Cinemachine;
 using UnityEngine;
 
 namespace Game.Scripts.CameraSystem
 {
-    public class TowerCameraController : CameraController
+    public class TowerCameraController : MonoBehaviour, IContextable
     {
         [SerializeField] private NoiseSettings mergeNoise;
         [Min(0f)]
@@ -31,45 +31,40 @@ namespace Game.Scripts.CameraSystem
         private bool isPlaying;
         private GameLevelController gameLevel;
         private GridWorldController gridWorld;
-        
-        public override IEnumerator EnableCamera(LevelController level)
+        private PawnPlayerController pawnPlayer;
+
+        public void Init(ContextContainer context)
         {
-            yield return base.EnableCamera(level);
+            gameLevel = context.Resolve<GameLevelController>();
+            gridWorld = context.Resolve<GridWorldController>();
+            pawnPlayer = context.Resolve<PawnPlayerController>();
+        }
 
-            if (level && level is GameLevelController tLevel)
-            {
-                gameLevel = tLevel;
-                gameLevel.GameStateChanged += OnGameStateChanged;
-                
-                UpdateFollowPosition();
-            }
-
-            if (level.GetWorld() is GridWorldController tWorld)
-            {
-                gridWorld = tWorld;
-                gridWorld.FigureMerged += OnFigureMerged;
-                gridWorld.LineDestroyed += OnLineDestroyed;
-            }
+        public void EnableCamera()
+        {
+            gameLevel.GameStateChanged += OnGameStateChanged;
+            gridWorld.FigureMerged += OnFigureMerged;
+            gridWorld.LineDestroyed += OnLineDestroyed;
+            
+            UpdateFollowPosition();
             
             isPlaying = gameLevel && gridWorld;
         }
 
-        public override void DisableCamera()
+        public void DisableCamera()
         {
             isPlaying = false;
             
             gameLevel.GameStateChanged -= OnGameStateChanged;
             gridWorld.FigureMerged -= OnFigureMerged;
             gridWorld.LineDestroyed -= OnLineDestroyed;
-            
-            base.DisableCamera();
         }
 
         private void UpdateFollowPosition()
         {
             if (gameLevel.GetGameState() is GameState.Fail)
             {
-                followAnchor.transform.position = gameLevel.GetPlayer().PlayerTransform.Get().position;
+                followAnchor.transform.position = pawnPlayer.GetPawn().transform.position;
             }
             else if (gameLevel.GetGameState() is GameState.Win)
             {

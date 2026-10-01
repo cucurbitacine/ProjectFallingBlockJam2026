@@ -1,12 +1,12 @@
+using CucuTools.LevelSystem;
 using Game.Scripts.CombatSystem;
-using Game.Scripts.Core.PlayerSystem;
 using Game.Scripts.PlayerSystem.PawnSystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Game.Scripts.PlayerSystem
 {
-    public class PawnPlayerController : PlayerController
+    public class PawnPlayerController : MonoBehaviour
     {
         [Header("Pawn")]
         [SerializeField] private PawnController pawn;
@@ -17,7 +17,7 @@ namespace Game.Scripts.PlayerSystem
         [Header("Input Pawn")]
         [SerializeField] private InputActionReference moveAction;
         [SerializeField] private InputActionReference jumpAction;
-
+        
         public void SetCallbacks()
         {
             moveAction.action.performed += OnMove;

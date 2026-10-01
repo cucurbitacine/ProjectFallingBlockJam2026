@@ -1,9 +1,6 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Game.Scripts.Core.LevelSystem;
-using Game.Scripts.Core.UISystem;
+using CucuTools.LevelSystem;
 using Game.Scripts.LevelSystem;
 using Game.Scripts.PlayerSystem;
 using Game.Scripts.SoundSystem;
@@ -12,7 +9,7 @@ using UnityEngine.UI;
 
 namespace Game.Scripts.UISystem
 {
-    public class GameUIController : UIController
+    public class GameUIController : MonoBehaviour, IContextable
     {
         [SerializeField] private PlayerHealthUI playerHealth;
         [SerializeField] private PlayerTimeLeftUI playerTimeLeft;
@@ -32,38 +29,37 @@ namespace Game.Scripts.UISystem
         
         private GameLevelController gameLevel;
         private PawnPlayerController pawnPlayer;
-        private Camera mainCamera;
-
         private readonly List<Button> buttons = new List<Button>();
         private readonly List<HoverEvent> hovers = new List<HoverEvent>();
         
         private bool isPlaying;
         
-        public override IEnumerator EnableUI(LevelController level)
+        public Camera CameraMain => Camera.main;
+        
+        public void Init(ContextContainer context)
         {
-            yield return base.EnableUI(level);
-
-            gameLevel = level as GameLevelController;
-            
-            pawnPlayer = level.GetPlayer<PawnPlayerController>();
+            gameLevel = context.Resolve<GameLevelController>();
+            pawnPlayer = context.Resolve<PawnPlayerController>();
+        }
+        
+        public void EnableUI()
+        {
             pawnPlayer.GetHealth().ValueChanged += OnPlayerHealthChanged;
             OnPlayerHealthChanged(0, pawnPlayer.GetHealth().GetValue());
 
-            mainCamera = level.GetCamera().CameraMain;
-            
             playerTimeLeft.SetCanvas(canvas);
-            playerTimeLeft.SetupUI(gameLevel, mainCamera);
+            playerTimeLeft.SetupUI(gameLevel, CameraMain);
             playerTimeLeft.EnableUI();
             
             playerHealth.SetCanvas(canvas);
-            playerHealth.SetupUI(pawnPlayer, mainCamera);
+            playerHealth.SetupUI(pawnPlayer, CameraMain);
             playerHealth.EnableUI();
             
             gameResult.SetupUI(gameLevel);
             gameResult.EnableUI();
             
             gameScore.SetCanvas(canvas);
-            gameScore.SetupUI(pawnPlayer, gameLevel, mainCamera);
+            gameScore.SetupUI(pawnPlayer, gameLevel, CameraMain);
             gameScore.EnableUI();
             
             nextFigure.SetupUI(gameLevel);
@@ -90,10 +86,8 @@ namespace Game.Scripts.UISystem
             isPlaying = true;
         }
         
-        public override void DisableUI()
+        public void DisableUI()
         {
-            base.DisableUI();
-            
             pawnPlayer.GetHealth().ValueChanged -= OnPlayerHealthChanged;
             
             playerHealth.DisableUI();
@@ -151,7 +145,7 @@ namespace Game.Scripts.UISystem
         {
             if (!isPlaying) return;
             
-            playerTimeLeft.UpdateUI(pawnPlayer.GetPawn().GetWorldCenter(), mainCamera, gameLevel.GetTimeLeft(), gameLevel.GetTimeMax());
+            playerTimeLeft.UpdateUI(pawnPlayer.GetPawn().GetWorldCenter(), CameraMain, gameLevel.GetTimeLeft(), gameLevel.GetTimeMax());
         }
     }
 }

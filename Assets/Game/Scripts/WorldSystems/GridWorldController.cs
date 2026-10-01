@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Game.Scripts.Core.WorldSystem;
 using Game.Scripts.Figures;
 using Game.Scripts.SoundSystem;
 using UnityEngine;
 
 namespace Game.Scripts.WorldSystems
 {
-    public class GridWorldController : WorldController
+    public class GridWorldController : MonoBehaviour
     {
         [Header("Grid World")]
         [SerializeField] private FigureController fallingFigure;

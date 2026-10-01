@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
-using Game.Scripts.Core.LevelSystem;
+using CucuTools.LevelSystem;
+using Game.Scripts.CameraSystem;
 using Game.Scripts.Figures;
 using Game.Scripts.FxSystem;
 using Game.Scripts.PlayerSystem;
+using Game.Scripts.UISystem;
 using Game.Scripts.WorldSystems;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -77,8 +79,10 @@ namespace Game.Scripts.LevelSystem
         private bool isFastFalling = false;
         private float fastFallingDuration = 0.0f;
 
-        private PawnPlayerController pawnPlayer;
         private GridWorldController gridWorld;
+        private PawnPlayerController pawnPlayer;
+        private TowerCameraController towerCamera;
+        private GameUIController gameUI;
         
         private FigureType[] figureTypes;
         private FigureRotation[] figureStates;
@@ -177,30 +181,46 @@ namespace Game.Scripts.LevelSystem
 
         #region Override API
 
-        protected override IEnumerator EnableWorld()
+        public override void Init(ContextContainer context)
         {
-            yield return base.EnableWorld();
+            gridWorld = FindAnyObjectByType<GridWorldController>();
+            pawnPlayer = FindAnyObjectByType<PawnPlayerController>();
+            towerCamera = FindAnyObjectByType<TowerCameraController>();
+            gameUI = FindAnyObjectByType<GameUIController>();
             
-            gridWorld = this.GetWorld<GridWorldController>();
+            context.Bind(this);
+            context.Bind(gridWorld);
+            context.Bind(pawnPlayer);
+            context.Bind(towerCamera);
+            context.Bind(gameUI);
+            
+            towerCamera.Init(context);
+            gameUI.Init(context);
         }
 
-        protected override IEnumerator EnablePlayer()
+        protected override IEnumerator StartLevel()
         {
-            yield return base.EnablePlayer();
-
-            pawnPlayer = this.GetPlayer<PawnPlayerController>();
-            pawnPlayer.PlayerTransform.Get().position = GetSpawnPoint();
-        }
-
-        protected override IEnumerator EnableLevel()
-        {
+            yield return base.StartLevel();
+            
             ChangeState(GameState.Initializing);
             
-            yield return base.EnableLevel();
+            pawnPlayer.GetPawn().transform.position = GetSpawnPoint();
+            towerCamera.EnableCamera();
+            gameUI.EnableUI();
             
             isPlaying = true;
             
             ChangeState(GameState.FigureFalling);
+        }
+
+        protected override void DestroyLevel()
+        {
+            isPlaying = false;
+            
+            towerCamera.DisableCamera();
+            gameUI.DisableUI();
+            
+            base.DestroyLevel();
         }
 
         #endregion

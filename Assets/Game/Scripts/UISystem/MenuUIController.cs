@@ -1,15 +1,12 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Game.Scripts.Core.LevelSystem;
-using Game.Scripts.Core.UISystem;
 using Game.Scripts.SoundSystem;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Game.Scripts.UISystem
 {
-    public class MenuUIController : UIController
+    public class MenuUIController : MonoBehaviour
     {
         [SerializeField] private SoundSource soundSource;
         [SerializeField] private SoundFxPreset buttonHoverSfx;
@@ -18,10 +15,8 @@ namespace Game.Scripts.UISystem
         private readonly List<Button> buttons = new List<Button>();
         private readonly List<HoverEvent> hovers = new List<HoverEvent>();
         
-        public override IEnumerator EnableUI(LevelController level)
+        public void EnableUI()
         {
-            yield return base.EnableUI(level);
-
             GetComponentsInChildren<Button>(true, buttons);
             hovers.AddRange(buttons.Select(b => b.GetComponent<HoverEvent>()).Where(h => h != null));
 
@@ -36,10 +31,8 @@ namespace Game.Scripts.UISystem
             }
         }
 
-        public override void DisableUI()
+        public void DisableUI()
         {
-            base.DisableUI();
-            
             foreach (var button in buttons)
             {
                 button.onClick.RemoveListener(OnButtonClick);
